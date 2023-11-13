@@ -2,25 +2,20 @@ import React from "react";
 import styled from "styled-components";
 import {MyPosts} from "./MyPosts/MyPosts";
 
-export const Profile = () => {
+export const Profile:React.FC = (props) => {
     return (
-        <StyledMain>
-            <div id="profile">
+        <>
+            <ProfileWrapper>
                 <div>ProfilePhoto</div>
                 <div>ProfileInfo</div>
-            </div>
+            </ProfileWrapper>
             <MyPosts/>
-        </StyledMain>
+        </>
     );
 };
 
-
-const StyledMain = styled.main`
-  grid-area: m;
-  background-color: cadetblue;
-  
-  div[id="profile"] {
-    min-height: 100px;
-  }
-  padding: 10px 10px;
+const ProfileWrapper = styled.div`
+  min-height: 100px;
 `
+
+
