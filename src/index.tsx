@@ -1,14 +1,9 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import "./index.css";
-import App from "./App";
-import {GlobalStyles} from "./components/styles/Global.styles";
+import {state} from "./redux/state"
+import {rerenderEntireTree} from "./render";
 
 
-ReactDOM.render(
-    <>
-        <App/>
-        <GlobalStyles/>
-    </>
-        ,document.getElementById("root")
-);
+
+
+rerenderEntireTree(state);

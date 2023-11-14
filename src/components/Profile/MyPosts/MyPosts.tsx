@@ -1,16 +1,32 @@
-import React from "react";
+import React, {ChangeEvent, LegacyRef} from "react";
 import {Post} from "./Post/Post";
 import styled from "styled-components";
+import {PostType} from "../../../App";
 
-export const MyPosts = () => {
+type MyPostsPropsType = {
+    posts: PostType[]
+    addNewPost:(newPostText:string)=>void
+}
+
+export const MyPosts: React.FC<MyPostsPropsType> = ({posts,addNewPost}) => {
+
+    const newPostElement: LegacyRef<HTMLTextAreaElement> = React.createRef();
+    const addPost = () => {
+        if (newPostElement.current) {
+            const text: string = newPostElement.current.value;
+            addNewPost(text)
+            newPostElement.current.value="";
+        }
+    }
+
+
     return (
         <MyPostsWrapper>
             <StyledTitle>My Posts</StyledTitle>
-            <StyledTextarea></StyledTextarea>
-            <StyledBtn>Add post</StyledBtn>
-            <Post post="Hello! It's my first post!" likesCount={10} dislikesCount={0}/>
-            <Post post="How are you?" likesCount={19} dislikesCount={2}/>
-            <Post post="JS is the power of magic!" likesCount={11} dislikesCount={5}/>
+            <StyledTextarea ref={newPostElement}></StyledTextarea>
+            <StyledBtn onClick={addPost}>Add post</StyledBtn>
+            {posts.map(p => <Post key={p.id} post={p.post} likesCount={p.likesCount}
+                                  dislikesCount={p.dislikesCount}/>)}
         </MyPostsWrapper>
     );
 };
@@ -23,12 +39,13 @@ const MyPostsWrapper = styled.div`
 const StyledTitle = styled.h3`
 
 `
-const StyledTextarea = styled.textarea`
+export const StyledTextarea = styled.textarea`
   max-width: 400px;
   min-height: 50px;
   resize: unset;
 `
 
-const StyledBtn = styled.button`
-width: 100px;
+export const StyledBtn = styled.button`
+  width: 100px;
+  margin-left: 300px;
 `

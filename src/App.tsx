@@ -7,12 +7,34 @@ import {Profile} from "./components/Profile/Profile";
 import {Footer} from "./components/Footer/Footer";
 import {Dialogs} from "./components/Dialogs/Dialogs";
 import {BrowserRouter, Route} from "react-router-dom";
-import {Users} from "./Users/Users";
-import {Music} from "./Music/Music";
-import {News} from "./News/News";
-import {Settings} from "./Settings/Settings";
+import {Users} from "./components/Users/Users";
+import {Music} from "./components/Music/Music";
+import {News} from "./components/News/News";
+import {Settings} from "./components/Settings/Settings";
 
-function App() {
+export type DialogUsersType={dialogUsers:DialogUserType[]}
+export type DialogUserType = {
+    id: number
+    name: string
+}
+export type MessagesType={messages:MessageType[]}
+export type MessageType = {
+    id: number
+    message: string
+}
+export type PostsType={posts:PostType[]}
+export type PostType = {
+    id: number
+    post: string
+    likesCount: number
+    dislikesCount: number
+}
+
+type AppPropsType = { state:{ profilePage:PostsType, dialogsPage:MessagesType & DialogUsersType}
+addNewPost:(newPostText:string)=>void
+}
+
+export const App: React.FC<AppPropsType> = ({state,addNewPost}) => {
 
     return (
         <BrowserRouter>
@@ -20,12 +42,13 @@ function App() {
                 <Header/>
                 <Navbar/>
                 <StyledMain>
-                    <Route path="/profile" component={() => <Profile/>}/>
-                    <Route path="/dialogs" component={() => <Dialogs/>}/>
-                    <Route path="/users" component={() => <Users/>}/>
-                    <Route path="/music" component={() => <Music/>}/>
-                    <Route path="/settings" component={() => <Settings/>}/>
-                    <Route path="/news" component={() => <News/>}/>
+                    <Route path="/profile" render={() => < Profile profilePage={state.profilePage} addNewPost={addNewPost}/>}/>
+                    <Route path="/dialogs"
+                           render={() => <Dialogs dialogsPage={state.dialogsPage}/>}/>
+                    <Route path="/users" render={() => <Users/>}/>
+                    <Route path="/music" render={() => <Music/>}/>
+                    <Route path="/settings" render={() => <Settings/>}/>
+                    <Route path="/news" render={() => <News/>}/>
                 </StyledMain>
                 <Footer/>
             </MainWrapper>
@@ -33,8 +56,6 @@ function App() {
     );
 }
 
-
-export default App;
 
 const MainWrapper = styled.div`
   display: grid;

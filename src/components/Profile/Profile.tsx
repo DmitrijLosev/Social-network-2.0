@@ -1,21 +1,20 @@
 import React from "react";
-import styled from "styled-components";
 import {MyPosts} from "./MyPosts/MyPosts";
+import {ProfileInfo} from "./ProfileInfo";
+import {PostsType} from "../../App";
 
-export const Profile:React.FC = (props) => {
+type ProfilePropsType = {
+    profilePage:PostsType
+    addNewPost:(newPostText:string)=>void
+}
+export const Profile: React.FC<ProfilePropsType> = ({profilePage,addNewPost}) => {
     return (
         <>
-            <ProfileWrapper>
-                <div>ProfilePhoto</div>
-                <div>ProfileInfo</div>
-            </ProfileWrapper>
-            <MyPosts/>
+            <ProfileInfo/>
+            <MyPosts posts={profilePage.posts} addNewPost={addNewPost}/>
         </>
     );
 };
 
-const ProfileWrapper = styled.div`
-  min-height: 100px;
-`
 
 

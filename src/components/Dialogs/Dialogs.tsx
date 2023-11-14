@@ -1,37 +1,68 @@
-import React from "react";
+import React, {LegacyRef} from "react";
 import styled from "styled-components";
-import {NavLink} from "react-router-dom";
+import {DialogUsersItem} from "./DialogUser/DialogUser";
+import {MessageItem} from "./Message/Message";
+import {DialogUsersType, DialogUserType, MessagesType, MessageType} from "../../App";
+import {StyledBtn, StyledTextarea} from "../Profile/MyPosts/MyPosts";
 
-export const Dialogs: React.FC = (props) => {
+
+type DialogsPropsType = { dialogsPage: MessagesType & DialogUsersType }
+
+const newMessageElement: LegacyRef<HTMLTextAreaElement> = React.createRef();
+
+const sendMessage = () => {
+    if (newMessageElement.current) {
+        const message: string = newMessageElement.current.value;
+        alert(message)
+    }
+}
+
+export const Dialogs: React.FC<DialogsPropsType> = ({dialogsPage}) => {
     return (<StyledWrapper>
-            <UsersWrapper>
+            <DialogUsersWrapper>
                 <ul>
-                    <li><NavLink to={"/dialogs/id1"}>Dima</NavLink></li>
-                    <li><NavLink to={"/dialogs/id2"}>Tanja</NavLink></li>
-                    <li><NavLink to={"/dialogs/id3"}>Svetlana</NavLink></li>
-                    <li><NavLink to={"/dialogs/id4"}>Dasha</NavLink></li>
+                    {dialogsPage.dialogUsers.map(i => <DialogUsersItem id={i.id} name={i.name} key={i.id}/>)}
                 </ul>
-            </UsersWrapper>
+            </DialogUsersWrapper>
             <DialogWrapper>
                 <ul>
-                    <li><span>Hello!</span></li>
-                    <li><span>How are you?</span></li>
-                    <li><span>How's your business?</span></li>
-                    <li><span>What are news?</span></li>
+                    {dialogsPage.messages.map(m => <MessageItem message={m.message} key={m.id}/>)}
                 </ul>
             </DialogWrapper>
+            <NewMessageWrapper>
+                <StyledTextarea ref={newMessageElement}></StyledTextarea>
+                <StyledBtn onClick={sendMessage}>Send</StyledBtn>
+            </NewMessageWrapper>
         </StyledWrapper>
     );
 };
 
-const UsersWrapper = styled.div`
+
+const DialogUsersWrapper = styled.div`
   width: 30%;
+  grid-area: u;
+  justify-self: center
 `
 const DialogWrapper = styled.div`
   width: 70%;
+  grid-area: d;
+  justify-self: center
 `
-const StyledWrapper = styled.div`
+const NewMessageWrapper = styled.div`
+  grid-area: m;
+  justify-self: center;
   display: flex;
+  flex-direction: column;
+  gap: 10px;
+`
 
+const StyledWrapper = styled.div`
+  display: grid;
+  grid-template-areas: "u d" "m m";
+  grid-template-rows: 8fr 2fr;
+  grid-template-columns: 2fr 8fr;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
 
 `
