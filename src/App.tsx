@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Dispatch} from "react";
 import "./App.css";
 import styled from "styled-components";
 import {Header} from "./components/Header/Header";
@@ -11,18 +11,22 @@ import {Users} from "./components/Users/Users";
 import {Music} from "./components/Music/Music";
 import {News} from "./components/News/News";
 import {Settings} from "./components/Settings/Settings";
+import {ActionsType, DialogsPageStateType, ProfilePageStateType} from "./redux/state";
+import {ProfileActionsType} from "./redux/profile-reducer";
+import {DialogActionsType} from "./redux/dialog-reducer";
 
-export type DialogUsersType={dialogUsers:DialogUserType[]}
+export type DialogUsersType = { dialogUsers: DialogUserType[] }
 export type DialogUserType = {
     id: number
     name: string
 }
-export type MessagesType={messages:MessageType[]}
+export type MessagesType = { messages: MessageType[] }
 export type MessageType = {
     id: number
     message: string
 }
-export type PostsType={posts:PostType[]}
+
+
 export type PostType = {
     id: number
     post: string
@@ -30,11 +34,14 @@ export type PostType = {
     dislikesCount: number
 }
 
-type AppPropsType = { state:{ profilePage:PostsType, dialogsPage:MessagesType & DialogUsersType}
-addNewPost:(newPostText:string)=>void
+type AppPropsType = {
+    state: { profilePage: ProfilePageStateType, dialogsPage: DialogsPageStateType }
+    dispatch:Dispatch<ActionsType>
 }
 
-export const App: React.FC<AppPropsType> = ({state,addNewPost}) => {
+export const App: React.FC<AppPropsType> = ({state, dispatch}) => {
+
+
 
     return (
         <BrowserRouter>
@@ -42,9 +49,10 @@ export const App: React.FC<AppPropsType> = ({state,addNewPost}) => {
                 <Header/>
                 <Navbar/>
                 <StyledMain>
-                    <Route path="/profile" render={() => < Profile profilePage={state.profilePage} addNewPost={addNewPost}/>}/>
+                    <Route path="/profile"
+                           render={() => < Profile profilePage={state.profilePage} dispatch={dispatch}/>}/>
                     <Route path="/dialogs"
-                           render={() => <Dialogs dialogsPage={state.dialogsPage}/>}/>
+                           render={() => <Dialogs dialogsPage={state.dialogsPage} dispatch={dispatch}/>}/>
                     <Route path="/users" render={() => <Users/>}/>
                     <Route path="/music" render={() => <Music/>}/>
                     <Route path="/settings" render={() => <Settings/>}/>

@@ -1,23 +1,29 @@
-import React, {LegacyRef} from "react";
+import React, {ChangeEvent, Dispatch} from "react";
 import styled from "styled-components";
 import {DialogUsersItem} from "./DialogUser/DialogUser";
 import {MessageItem} from "./Message/Message";
-import {DialogUsersType, DialogUserType, MessagesType, MessageType} from "../../App";
 import {StyledBtn, StyledTextarea} from "../Profile/MyPosts/MyPosts";
+import {DialogsPageStateType} from "../../redux/state";
+import {addDialogMessageAC, changeDialogMessageAC, DialogActionsType} from "../../redux/dialog-reducer";
 
 
-type DialogsPropsType = { dialogsPage: MessagesType & DialogUsersType }
-
-const newMessageElement: LegacyRef<HTMLTextAreaElement> = React.createRef();
-
-const sendMessage = () => {
-    if (newMessageElement.current) {
-        const message: string = newMessageElement.current.value;
-        alert(message)
-    }
+type DialogsPropsType = {
+    dialogsPage: DialogsPageStateType
+    dispatch:Dispatch<DialogActionsType>
 }
 
-export const Dialogs: React.FC<DialogsPropsType> = ({dialogsPage}) => {
+
+export const Dialogs: React.FC<DialogsPropsType> = ({dialogsPage, dispatch}) => {
+
+    const sendMessage = () => {
+        dispatch(addDialogMessageAC())
+    }
+
+    const onChangeMessageHandler = (e:ChangeEvent<HTMLTextAreaElement>) => {
+            dispatch(changeDialogMessageAC(e.currentTarget.value))
+    }
+
+
     return (<StyledWrapper>
             <DialogUsersWrapper>
                 <ul>
@@ -29,9 +35,16 @@ export const Dialogs: React.FC<DialogsPropsType> = ({dialogsPage}) => {
                     {dialogsPage.messages.map(m => <MessageItem message={m.message} key={m.id}/>)}
                 </ul>
             </DialogWrapper>
+
             <NewMessageWrapper>
-                <StyledTextarea ref={newMessageElement}></StyledTextarea>
-                <StyledBtn onClick={sendMessage}>Send</StyledBtn>
+                <StyledTextarea onChange={onChangeMessageHandler}
+                                value={dialogsPage.typingDialogMessage}
+                                placeholder="Enter your message">
+
+                </StyledTextarea>
+                <StyledBtn onClick={sendMessage}>
+                    Send
+                </StyledBtn>
             </NewMessageWrapper>
         </StyledWrapper>
     );

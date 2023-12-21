@@ -1,21 +1,29 @@
-import React, {ChangeEvent, LegacyRef} from "react";
+import React, {Dispatch, LegacyRef} from "react";
 import {Post} from "./Post/Post";
 import styled from "styled-components";
 import {PostType} from "../../../App";
+import {addPostAC, changePostAC, ProfileActionsType} from "../../../redux/profile-reducer";
+
+
 
 type MyPostsPropsType = {
     posts: PostType[]
-    addNewPost:(newPostText:string)=>void
+    dispatch:Dispatch<ProfileActionsType>
+    typingPostText: string
 }
 
-export const MyPosts: React.FC<MyPostsPropsType> = ({posts,addNewPost}) => {
+export const MyPosts: React.FC<MyPostsPropsType> = ({posts, dispatch, typingPostText}) => {
 
     const newPostElement: LegacyRef<HTMLTextAreaElement> = React.createRef();
     const addPost = () => {
+        if (typingPostText) {
+            dispatch(addPostAC())
+        }
+
+    }
+    const onPostChange = () => {
         if (newPostElement.current) {
-            const text: string = newPostElement.current.value;
-            addNewPost(text)
-            newPostElement.current.value="";
+            dispatch(changePostAC(newPostElement.current.value))
         }
     }
 
@@ -23,7 +31,8 @@ export const MyPosts: React.FC<MyPostsPropsType> = ({posts,addNewPost}) => {
     return (
         <MyPostsWrapper>
             <StyledTitle>My Posts</StyledTitle>
-            <StyledTextarea ref={newPostElement}></StyledTextarea>
+            <StyledTextarea ref={newPostElement} value={typingPostText} onChange={onPostChange}
+                            placeholder={"Enter new post"}></StyledTextarea>
             <StyledBtn onClick={addPost}>Add post</StyledBtn>
             {posts.map(p => <Post key={p.id} post={p.post} likesCount={p.likesCount}
                                   dislikesCount={p.dislikesCount}/>)}
