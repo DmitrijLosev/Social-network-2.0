@@ -3,18 +3,16 @@ import styled from "styled-components";
 import {DialogUsersItem} from "./DialogUser/DialogUser";
 import {MessageItem} from "./Message/Message";
 import {StyledBtn, StyledTextarea} from "../Profile/MyPosts/MyPosts";
-import {DialogsPageStateType} from "../../redux/state";
 import {addDialogMessageAC, changeDialogMessageAC, DialogActionsType} from "../../redux/dialog-reducer";
+import {useDispatch, useSelector} from "react-redux";
+import {DialogsPageStateType, RootStateType} from "../../redux/redux-store";
 
 
-type DialogsPropsType = {
-    dialogsPage: DialogsPageStateType
-    dispatch:Dispatch<DialogActionsType>
-}
 
+export const Dialogs: React.FC = () => {
 
-export const Dialogs: React.FC<DialogsPropsType> = ({dialogsPage, dispatch}) => {
-
+    const DialogPageState=useSelector<RootStateType,DialogsPageStateType>(state=>state.dialogsPage)
+    const dispatch=useDispatch<Dispatch<DialogActionsType>>()
     const sendMessage = () => {
         dispatch(addDialogMessageAC())
     }
@@ -27,18 +25,18 @@ export const Dialogs: React.FC<DialogsPropsType> = ({dialogsPage, dispatch}) => 
     return (<StyledWrapper>
             <DialogUsersWrapper>
                 <ul>
-                    {dialogsPage.dialogUsers.map(i => <DialogUsersItem id={i.id} name={i.name} key={i.id}/>)}
+                    {DialogPageState.dialogUsers.map(i => <DialogUsersItem id={i.id} name={i.name} key={i.id}/>)}
                 </ul>
             </DialogUsersWrapper>
             <DialogWrapper>
                 <ul>
-                    {dialogsPage.messages.map(m => <MessageItem message={m.message} key={m.id}/>)}
+                    {DialogPageState.messages.map(m => <MessageItem message={m.message} key={m.id}/>)}
                 </ul>
             </DialogWrapper>
 
             <NewMessageWrapper>
                 <StyledTextarea onChange={onChangeMessageHandler}
-                                value={dialogsPage.typingDialogMessage}
+                                value={DialogPageState.typingDialogMessage}
                                 placeholder="Enter your message">
 
                 </StyledTextarea>

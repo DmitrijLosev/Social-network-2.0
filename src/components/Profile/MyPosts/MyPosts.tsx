@@ -3,16 +3,19 @@ import {Post} from "./Post/Post";
 import styled from "styled-components";
 import {PostType} from "../../../App";
 import {addPostAC, changePostAC, ProfileActionsType} from "../../../redux/profile-reducer";
+import {useDispatch} from "react-redux";
+
 
 
 
 type MyPostsPropsType = {
     posts: PostType[]
-    dispatch:Dispatch<ProfileActionsType>
     typingPostText: string
 }
 
-export const MyPosts: React.FC<MyPostsPropsType> = ({posts, dispatch, typingPostText}) => {
+export const MyPosts: React.FC<MyPostsPropsType> = ({posts, typingPostText}) => {
+
+    const dispatch=useDispatch<Dispatch<ProfileActionsType>>()
 
     const newPostElement: LegacyRef<HTMLTextAreaElement> = React.createRef();
     const addPost = () => {

@@ -1,4 +1,4 @@
-import React, {Dispatch} from "react";
+import React from "react";
 import "./App.css";
 import styled from "styled-components";
 import {Header} from "./components/Header/Header";
@@ -11,9 +11,6 @@ import {Users} from "./components/Users/Users";
 import {Music} from "./components/Music/Music";
 import {News} from "./components/News/News";
 import {Settings} from "./components/Settings/Settings";
-import {ActionsType, DialogsPageStateType, ProfilePageStateType} from "./redux/state";
-import {ProfileActionsType} from "./redux/profile-reducer";
-import {DialogActionsType} from "./redux/dialog-reducer";
 
 export type DialogUsersType = { dialogUsers: DialogUserType[] }
 export type DialogUserType = {
@@ -26,7 +23,6 @@ export type MessageType = {
     message: string
 }
 
-
 export type PostType = {
     id: number
     post: string
@@ -34,12 +30,8 @@ export type PostType = {
     dislikesCount: number
 }
 
-type AppPropsType = {
-    state: { profilePage: ProfilePageStateType, dialogsPage: DialogsPageStateType }
-    dispatch:Dispatch<ActionsType>
-}
 
-export const App: React.FC<AppPropsType> = ({state, dispatch}) => {
+export const App: React.FC= () => {
 
 
 
@@ -50,9 +42,9 @@ export const App: React.FC<AppPropsType> = ({state, dispatch}) => {
                 <Navbar/>
                 <StyledMain>
                     <Route path="/profile"
-                           render={() => < Profile profilePage={state.profilePage} dispatch={dispatch}/>}/>
+                           render={() => < Profile />}/>
                     <Route path="/dialogs"
-                           render={() => <Dialogs dialogsPage={state.dialogsPage} dispatch={dispatch}/>}/>
+                           render={() => <Dialogs />}/>
                     <Route path="/users" render={() => <Users/>}/>
                     <Route path="/music" render={() => <Music/>}/>
                     <Route path="/settings" render={() => <Settings/>}/>

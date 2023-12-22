@@ -1,23 +1,30 @@
 import React from "react";
 import "./index.css";
-import {store} from "./redux/state"
 import ReactDOM from "react-dom";
 import {App} from "./App";
 import {GlobalStyles} from "./components/styles/Global.styles";
+import {store} from "./redux/redux-store";
+import {Provider} from "react-redux";
 
 
-const rerenderEntireTree = ()=> {
+
 
     ReactDOM.render(
-        <>
-            <App state={store.getState()} dispatch={store.dispatch.bind(store)}
-                />
+        <Provider store={store}>
+            <App />
             <GlobalStyles/>
-        </>
+        </Provider>
         , document.getElementById("root")
     );
-}
 
-rerenderEntireTree();
 
-store.subscribe(rerenderEntireTree)
+store.subscribe(()=>
+    ReactDOM.render(
+        <Provider store={store}>
+            <App />
+            <GlobalStyles/>
+        </Provider>
+        , document.getElementById("root")
+    )
+)
+

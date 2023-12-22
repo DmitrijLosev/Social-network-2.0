@@ -2,23 +2,24 @@ import {DialogUsersType, MessagesType, PostType} from "../App";
 import {profileReducer,ProfileActionsType} from "./profile-reducer";
 import {DialogActionsType, dialogReducer} from "./dialog-reducer";
 
-export type ActionsType=ProfileActionsType | DialogActionsType
+// export type ActionsType=ProfileActionsType | DialogActionsType
 
-export type StoreType = {
+/*export type StoreType = {
     _state: RootStateType
     _rerender: () => void
     subscribe: (observer: () => void) => void
     getState: () => RootStateType
     dispatch:(action:ActionsType)=>void
-}
-export type DialogsPageStateType =DialogUsersType & MessagesType & {typingDialogMessage:string}
+}*/
+/*export type DialogsPageStateType =DialogUsersType & MessagesType & {typingDialogMessage:string}
 export type ProfilePageStateType = { posts: PostType[],  typingPostText:string }
 export type RootStateType = {
     dialogsPage: DialogsPageStateType
     profilePage: ProfilePageStateType
-}
+}*/
 
-export let store:StoreType = {
+/*
+export const store:StoreType = {
     _state: {
         dialogsPage: {
             dialogUsers: [
@@ -60,6 +61,7 @@ export let store:StoreType = {
         this._rerender()
     }
 }
+*/
 
 
 
