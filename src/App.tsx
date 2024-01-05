@@ -12,23 +12,6 @@ import {Music} from "./components/Music/Music";
 import {News} from "./components/News/News";
 import {Settings} from "./components/Settings/Settings";
 
-export type DialogUsersType = { dialogUsers: DialogUserType[] }
-export type DialogUserType = {
-    id: number
-    name: string
-}
-export type MessagesType = { messages: MessageType[] }
-export type MessageType = {
-    id: number
-    message: string
-}
-
-export type PostType = {
-    id: number
-    post: string
-    likesCount: number
-    dislikesCount: number
-}
 
 
 export const App: React.FC= () => {

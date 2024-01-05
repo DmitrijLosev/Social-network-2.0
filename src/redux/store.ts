@@ -1,4 +1,4 @@
-import {DialogUsersType, MessagesType, PostType} from "../App";
+
 import {profileReducer,ProfileActionsType} from "./profile-reducer";
 import {DialogActionsType, dialogReducer} from "./dialog-reducer";
 

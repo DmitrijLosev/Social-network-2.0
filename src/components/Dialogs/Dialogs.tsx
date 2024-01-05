@@ -3,9 +3,15 @@ import styled from "styled-components";
 import {DialogUsersItem} from "./DialogUser/DialogUser";
 import {MessageItem} from "./Message/Message";
 import {StyledBtn, StyledTextarea} from "../Profile/MyPosts/MyPosts";
-import {addDialogMessageAC, changeDialogMessageAC, DialogActionsType} from "../../redux/dialog-reducer";
+import {
+    addDialogMessageAC,
+    changeDialogMessageAC,
+    DialogActionsType,
+    DialogsPageStateType
+} from "../../redux/dialog-reducer";
 import {useDispatch, useSelector} from "react-redux";
-import {DialogsPageStateType, RootStateType} from "../../redux/redux-store";
+import {RootStateType} from "../../redux/redux-store";
+
 
 
 

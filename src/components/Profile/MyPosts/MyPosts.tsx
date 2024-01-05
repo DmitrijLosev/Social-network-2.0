@@ -1,8 +1,7 @@
 import React, {Dispatch, LegacyRef} from "react";
 import {Post} from "./Post/Post";
 import styled from "styled-components";
-import {PostType} from "../../../App";
-import {addPostAC, changePostAC, ProfileActionsType} from "../../../redux/profile-reducer";
+import {addPostAC, changePostAC, PostType, ProfileActionsType} from "../../../redux/profile-reducer";
 import {useDispatch} from "react-redux";
 
 

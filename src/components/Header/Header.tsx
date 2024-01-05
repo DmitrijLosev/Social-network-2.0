@@ -3,6 +3,7 @@ import logo from "../../assets/images/MainLogo.svg";
 import styled from "styled-components";
 
 export const Header = () => {
+
     return (
         <StyledHeader>
             <HeaderWrapper>

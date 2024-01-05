@@ -1,8 +1,9 @@
 import React from "react";
 import {MyPosts} from "./MyPosts/MyPosts";
 import {ProfileInfo} from "./ProfileInfo/ProfileInfo";
-import {ProfilePageStateType, RootStateType} from "../../redux/redux-store";
+import { RootStateType} from "../../redux/redux-store";
 import {useSelector} from "react-redux";
+import {ProfilePageStateType} from "../../redux/profile-reducer";
 
 
 
