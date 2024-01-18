@@ -2,12 +2,14 @@ import {action} from "@storybook/addon-actions"
 import {Post} from "./Post";
 import React from "react";
 import {GlobalStyles} from "../../../styles/Global.styles";
+import {ReduxStoreProviderDecorator} from "../../../../stories/ReduxStoreProviderDecorator";
 
 
 
 
 export default {
     component: Post,
+    decorators:ReduxStoreProviderDecorator
 };
 
 
@@ -25,6 +27,6 @@ export const FirstStory: Story = {
 const callback = action("some item was clicked")*/
 export const OnePost = () => {
 
-    return <><Post post={"Hello World"} dislikesCount={10} likesCount={200}/><GlobalStyles/></>
+    return <><Post post={{post:"Hello World",dislikesCount:10, likesCount:200,id: 7}}/><GlobalStyles/></>
 };
 

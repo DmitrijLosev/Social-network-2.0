@@ -4,8 +4,7 @@ import {DialogUsersItem} from "./DialogUser/DialogUser";
 import {MessageItem} from "./Message/Message";
 import {StyledBtn, StyledTextarea} from "../Profile/MyPosts/MyPosts";
 import {
-    addDialogMessageAC,
-    changeDialogMessageAC,
+    actions,
     DialogActionsType,
     DialogsPageStateType
 } from "../../redux/dialog-reducer";
@@ -20,11 +19,11 @@ export const Dialogs: React.FC = () => {
     const DialogPageState=useSelector<RootStateType,DialogsPageStateType>(state=>state.dialogsPage)
     const dispatch=useDispatch<Dispatch<DialogActionsType>>()
     const sendMessage = () => {
-        dispatch(addDialogMessageAC())
+        dispatch(actions.addDialogMessage)
     }
 
     const onChangeMessageHandler = (e:ChangeEvent<HTMLTextAreaElement>) => {
-            dispatch(changeDialogMessageAC(e.currentTarget.value))
+            dispatch(actions.changeDialogMessage(e.currentTarget.value))
     }
 
 

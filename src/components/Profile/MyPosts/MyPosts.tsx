@@ -1,7 +1,7 @@
 import React, {Dispatch, LegacyRef} from "react";
 import {Post} from "./Post/Post";
 import styled from "styled-components";
-import {addPostAC, changePostAC, PostType, ProfileActionsType} from "../../../redux/profile-reducer";
+import {actions, PostType, ProfileActionsType} from "../../../redux/profile-reducer";
 import {useDispatch} from "react-redux";
 
 
@@ -19,13 +19,13 @@ export const MyPosts: React.FC<MyPostsPropsType> = ({posts, typingPostText}) => 
     const newPostElement: LegacyRef<HTMLTextAreaElement> = React.createRef();
     const addPost = () => {
         if (typingPostText) {
-            dispatch(addPostAC())
+            dispatch(actions.addPost)
         }
 
     }
     const onPostChange = () => {
         if (newPostElement.current) {
-            dispatch(changePostAC(newPostElement.current.value))
+            dispatch(actions.changePost(newPostElement.current.value))
         }
     }
 
@@ -36,8 +36,7 @@ export const MyPosts: React.FC<MyPostsPropsType> = ({posts, typingPostText}) => 
             <StyledTextarea ref={newPostElement} value={typingPostText} onChange={onPostChange}
                             placeholder={"Enter new post"}></StyledTextarea>
             <StyledBtn onClick={addPost}>Add post</StyledBtn>
-            {posts.map(p => <Post key={p.id} post={p.post} likesCount={p.likesCount}
-                                  dislikesCount={p.dislikesCount}/>)}
+            {posts.map(p => <Post key={p.id} post={p}/>)}
         </MyPostsWrapper>
     );
 };

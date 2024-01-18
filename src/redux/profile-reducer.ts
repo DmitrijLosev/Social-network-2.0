@@ -1,8 +1,11 @@
 import {ActionsType} from "./redux-store";
 
 
-const ADD_POST = "ADD-POST" as const
-const CHANGE_POST = "CHANGE-POST" as const
+const ADD_POST = "PROFILE/ADD-POST" as const
+const CHANGE_POST = "PROFILE/CHANGE-POST" as const
+const LIKE_POST = "PROFILE/LIKE-POST" as const
+const DISLIKE_POST = "PROFILE/DISLIKE-POST" as const
+const DELETE_POST = "PROFILE/DELETE-POST" as const
 
 
 const initialState = {
@@ -18,25 +21,39 @@ export const profileReducer = (state: ProfilePageStateType = initialState, actio
 
     switch (action.type) {
         case ADD_POST:
-            state.posts.push({
-                id: state.posts.length + 1,
-                post: state.typingPostText,
-                likesCount: 0,
-                dislikesCount: 0,
-            })
-            state.typingPostText = "";
-            return state;
+            return {
+                ...state, posts: [...state.posts, {
+                    id: state.posts.length + 1,
+                    post: state.typingPostText,
+                    likesCount: 0,
+                    dislikesCount: 0
+                }],
+                typingPostText: ""
+            }
         case CHANGE_POST:
-            state.typingPostText = action.typingPostText
-            return state
+            return {...state, typingPostText: action.typingPostText}
+        case LIKE_POST:
+            return {...state,
+                posts: state.posts.map(p=>p.id === action.postId ?
+                    {...p, likesCount:p.likesCount+1} : p)}
+        case DISLIKE_POST:
+            return {...state,
+                posts: state.posts.map(p=>p.id === action.postId ?
+                    {...p, dislikesCount:p.dislikesCount+1} : p)}
+        case DELETE_POST:
+            return {...state,posts: state.posts.filter(p=>p.id !== action.postId)}
         default:
             return state
 
     }
 }
-
-export const addPostAC = () => ({type: ADD_POST}) as const
-export const changePostAC = (typingPostText: string) => ({type: CHANGE_POST, typingPostText}) as const
+export const actions = {
+    addPost: {type: ADD_POST} as const,
+    changePost:(typingPostText: string)=>({type: CHANGE_POST, typingPostText}) as const,
+    likePost: (postId: number) => ({type: LIKE_POST, postId}) as const,
+    dislikePost: (postId: number) => ({type: DISLIKE_POST, postId}) as const,
+    deletePost: (postId: number) => ({type: DELETE_POST, postId}) as const
+}
 
 export type PostType = {
     id: number
@@ -45,4 +62,4 @@ export type PostType = {
     dislikesCount: number
 }
 export type ProfilePageStateType = typeof initialState;
-export type ProfileActionsType = ReturnType<typeof addPostAC> | ReturnType<typeof changePostAC>
+export type ProfileActionsType = typeof actions.addPost | ReturnType<typeof actions.changePost> | ReturnType<typeof actions.likePost> | ReturnType<typeof actions.dislikePost> | ReturnType<typeof actions.deletePost>

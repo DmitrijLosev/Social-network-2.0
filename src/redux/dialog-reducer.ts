@@ -1,8 +1,8 @@
 import {ActionsType} from "./redux-store";
 
 
-const CHANGE_DIALOG_MESSAGE = "CHANGE-DIALOG-MESSAGE" as const
-const ADD_DIALOG_MESSAGE = "ADD-DIALOG-MESSAGE" as const
+const CHANGE_DIALOG_MESSAGE = "DIALOGS/CHANGE-DIALOG-MESSAGE" as const
+const ADD_DIALOG_MESSAGE = "DIALOGS/ADD-DIALOG-MESSAGE" as const
 
 const initialState = {
     dialogUsers: [
@@ -25,24 +25,23 @@ export const dialogReducer = (state: DialogsPageStateType = initialState, action
 
     switch (action.type) {
         case ADD_DIALOG_MESSAGE :
-            state.messages.push({
-                id: state.messages.length + 1,
-                message: state.typingDialogMessage,
-            })
-            state.typingDialogMessage = "";
-            return state
+            return {
+                ...state,
+            messages: [...state.messages, {id:state.messages.length + 1, message:state.typingDialogMessage}],
+            typingDialogMessage: ""
+            }
         case CHANGE_DIALOG_MESSAGE:
-            state.typingDialogMessage = action.typingDialogMessage
-            return state
+            return {...state,typingDialogMessage:action.typingDialogMessage}
         default:
             return state
     }
 }
 
+export const actions={
+    addDialogMessage:{type: ADD_DIALOG_MESSAGE} as const,
+    changeDialogMessage:(typingDialogMessage: string) =>
+        ({type: CHANGE_DIALOG_MESSAGE, typingDialogMessage}) as const}
 
-export const addDialogMessageAC = () => ({type: ADD_DIALOG_MESSAGE}) as const
-export const changeDialogMessageAC = (typingDialogMessage: string) =>
-    ({type: CHANGE_DIALOG_MESSAGE, typingDialogMessage}) as const
 
 
 export type DialogUserType = {
@@ -54,4 +53,4 @@ export type MessageType = {
     message: string
 }
 export type DialogsPageStateType =typeof initialState
-export type DialogActionsType = ReturnType<typeof addDialogMessageAC> | ReturnType<typeof changeDialogMessageAC>
+export type DialogActionsType = typeof actions.addDialogMessage | ReturnType<typeof actions.changeDialogMessage>
