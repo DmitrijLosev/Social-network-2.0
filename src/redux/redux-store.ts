@@ -1,7 +1,7 @@
 import {combineReducers, createStore} from "redux";
 import {ProfileActionsType, profileReducer} from "./profile-reducer";
 import {DialogActionsType, dialogReducer} from "./dialog-reducer";
-import {UsersActionsType, usersReducer} from "./usersReduser";
+import {UsersActionsType, usersReducer} from "./users-reduser";
 
 
 const rootReducer=combineReducers({

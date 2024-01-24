@@ -1,12 +1,12 @@
 import React, {Dispatch, useEffect} from "react";
-import {actions, UserType} from "../../redux/usersReduser";
+import {actions} from "../../redux/users-reduser";
 import styled from "styled-components";
 import follow from "./../../assets/images/follower.svg"
 import unfollow from "./../../assets/images/unfollower.svg"
 import {useDispatch} from "react-redux";
 import {ActionsType} from "../../redux/redux-store";
-import smallUnknownPhoto from "../../assets/images/UnknowIcon.svg";
-
+import {UserType} from "../../api/api-users";
+import unknown from "../../assets/images/UnknowIcon.svg"
 export const User: React.FC<{ user: UserType }> = React.memo(({user}) => {
 
         const dispatch = useDispatch<Dispatch<ActionsType>>()
@@ -19,15 +19,15 @@ export const User: React.FC<{ user: UserType }> = React.memo(({user}) => {
         }
         return (
             <StyledUser>
-                <UserPhoto src={user.photos.small} alt={"user photo here"}/>
+                <UserPhoto src={user.photos.small ? user.photos.small : unknown} alt={"user photo here"}/>
                 <UserInfoWrapper>
                     <UserName>{user.name}</UserName>
                     <UserStatus>{user.status}</UserStatus>
                 </UserInfoWrapper>
                 <FollowButtomWrapper>
-                    <StyledFollowButton onClick={followButtonHandler} disabled={user.follow}><img src={follow}
+                    <StyledFollowButton onClick={followButtonHandler} disabled={user.followed}><img src={follow}
                                                                                                   alt={"follow button here"}/></StyledFollowButton>
-                    <StyledFollowButton onClick={unfollowButtonHandler} disabled={!user.follow}><img src={unfollow}
+                    <StyledFollowButton onClick={unfollowButtonHandler} disabled={!user.followed}><img src={unfollow}
                                                                                                      alt={"unfollow button here"}/></StyledFollowButton>
                 </FollowButtomWrapper>
 
@@ -39,7 +39,7 @@ export const User: React.FC<{ user: UserType }> = React.memo(({user}) => {
 const UserPhoto = styled.img`
   width: 60px;
   height: 60px;
-  border-radius: 50%;
+  border-radius: 5px;
 
 `
 const StyledUser = styled.li`

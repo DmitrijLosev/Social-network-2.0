@@ -1,4 +1,3 @@
-import {action} from "@storybook/addon-actions"
 import {Dialogs} from "./Dialogs";
 import React from "react";
 import {store} from "../../redux/redux-store";

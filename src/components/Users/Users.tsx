@@ -1,79 +1,60 @@
 import React, {Dispatch, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {ActionsType, RootStateType} from "../../redux/redux-store";
-import {actions, UserType} from "../../redux/usersReduser";
+import {actions, UsersPageStateType} from "../../redux/users-reduser";
 import {User} from "./User";
 import styled from "styled-components";
-import smallUnknownPhoto from "../../assets/images/UnknowIcon.svg";
+import {usersApi} from "../../api/api-users";
+import {ConfigProvider, Pagination, PaginationProps} from "antd";
 
 export const Users = () => {
-    const users=useSelector<RootStateType,UserType[]>(state=>state.usersPage.users)
+    const {users,totalUsersCount,pageSize,currentPage} = useSelector<RootStateType, UsersPageStateType>(state => state.usersPage)
     const dispatch = useDispatch<Dispatch<ActionsType>>()
 
-    useEffect(()=>{
-        console.log("effect")
-        dispatch(actions.setUsers([
-            {
-                id: 1,
-                name: "Dima Losev",
-                status: "I am frontend Developer",
-                photos: {
-                    small: smallUnknownPhoto,
-                    large:smallUnknownPhoto
-                },
-                follow: false
-            },
-            {
-                id: 2,
-                name: "Tanya Loseva",
-                status: "I am Sale Assistant",
-                photos: {
-                    small: smallUnknownPhoto,
-                    large: smallUnknownPhoto
-                },
-                follow: true
-            },
-            {
-                id: 3,
-                name: "Nikita Losev",
-                status: "I am a boy",
-                photos: {
-                    small: smallUnknownPhoto,
-                    large: smallUnknownPhoto
-                },
-                follow: true
-            },
-            {
-                id: 4,
-                name: "Alesja Loseva",
-                status: "I am a girl",
-                photos: {
-                    small: smallUnknownPhoto,
-                    large: smallUnknownPhoto
-                },
-                follow: true
-            }
-        ]))},[])
+    useEffect(() => {
+        (async () => {
+            let response = await usersApi.getUsers(pageSize, currentPage)
+            dispatch(actions.setUsers(response.items))
+            dispatch(actions.setTotalUsersCount(response.totalCount))
+        }) ()
+    }, [currentPage,pageSize])
 
+    const onPaginationChange: PaginationProps['onChange'] = (pageSize,pageNumber) => {
+        dispatch(actions.setCurrentPage(pageSize))
+        dispatch(actions.setPageSize(pageNumber))
+    };
     return (
+        <ConfigProvider
+            theme={{
+                components: {
+                    Pagination: {
+                        itemActiveBg:"lightblue",
+                        colorBgContainer:"lightskyblue",
+                        colorBorder:"transparent",
+                    },
+                },
+            }}
+        >
         <UsersWrapper>
             <UserListTitle>List of users</UserListTitle>
+            <Pagination showQuickJumper defaultCurrent={1} total={totalUsersCount} onChange={onPaginationChange} />
             <UserList>
-                {users.map(u=><User key={u.id} user={u}/>)}
+                {users.map(u => <User key={u.id} user={u}/>)}
             </UserList>
         </UsersWrapper>
+        </ConfigProvider>
     );
 };
 
 const UserListTitle = styled.h2`
-    padding: 10px;
- color: aqua;
+  padding: 10px;
+  color: aqua;
 `
 const UserList = styled.ul`
 
 `
 const UsersWrapper = styled.div`
-display: flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
 `
