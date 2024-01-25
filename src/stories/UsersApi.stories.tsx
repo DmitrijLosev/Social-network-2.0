@@ -3,8 +3,9 @@ import {usersApi} from "../api/api-users";
 
 
 
+
 export default {
-    title: "ApiTestingStories",
+    title: "API/UsersApi",
 };
 
 
@@ -34,3 +35,6 @@ export const GetUsersApi = () => {
 
     return <div>{JSON.stringify(state)}</div>
 };
+
+
+

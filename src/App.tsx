@@ -11,6 +11,8 @@ import {Users} from "./components/Users/Users";
 import {Music} from "./components/Music/Music";
 import {News} from "./components/News/News";
 import {Settings} from "./components/Settings/Settings";
+import {Messages} from "./components/Messages/Messages";
+import {MessagesWithUser} from "./components/Messages/MessagesWithUser";
 
 
 
@@ -28,6 +30,10 @@ export const App: React.FC= () => {
                            render={() => < Profile />}/>
                     <Route path="/dialogs"
                            render={() => <Dialogs />}/>
+                    <Route exact path="/messages"
+                           render={() => <Messages />}/>
+                    <Route path="/messages/:id"
+                           render={() => <MessagesWithUser />}/>
                     <Route path="/users" render={() => <Users/>}/>
                     <Route path="/music" render={() => <Music/>}/>
                     <Route path="/settings" render={() => <Settings/>}/>

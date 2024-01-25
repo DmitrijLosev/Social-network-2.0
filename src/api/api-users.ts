@@ -14,12 +14,12 @@ const getResponse = async (response: Promise<Response>) => {
 }
 
 export const usersApi = {
-    getUsers(count:number,pageNumber:number):Promise<GetUsersResponseType> {
+    getUsers(count:number,pageNumber:number):Promise< GetItemsResponseType<UserType[]>> {
         return getResponse(fetch(`${Base_Url}/users?count=${count}&page=${pageNumber} `, settings))
     }
 }
-type GetUsersResponseType = {
-    items:UserType[]
+export type GetItemsResponseType<I={}> = {
+    items:I
     totalCount:number
     error:string | null
 }
