@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {Avatar, Button, FloatButton, List} from "antd";
+import {Avatar, List} from "antd";
 import {DialogsType} from "../../api/api-dialogs";
 import {useDispatch, useSelector} from "react-redux";
 import {setDialogsTC, upInDialogListTC} from "../../redux/messages-reducer";
@@ -7,8 +7,9 @@ import {RootStateType} from "../../redux/redux-store";
 import styled from "styled-components";
 import unknown from "../../assets/images/UnknowIcon.svg";
 import {NavLink} from "react-router-dom";
+import {Wrapper} from "@storybook/blocks";
 
-export const Messages = () => {
+export const DialogsPage = () => {
 
     const dispatch = useDispatch()
     const dialogs = useSelector<RootStateType, DialogsType[]>(state => state.messagesPage.dialogs)
@@ -22,7 +23,7 @@ export const Messages = () => {
     }
 
     return (
-        <div>
+        <DialogsWrapper>
             <DialogsTitle>List of Dialogs</DialogsTitle>
             <List
                 loading={false}
@@ -44,7 +45,7 @@ export const Messages = () => {
                 )}
             />
 
-        </div>
+        </DialogsWrapper>
     );
 };
 
@@ -52,4 +53,9 @@ const DialogsTitle = styled.h2`
   padding: 10px;
   color: aqua;
   text-align: center;
+`
+const DialogsWrapper = styled.div`
+a {
+  font-size: 18px;
+}
 `
