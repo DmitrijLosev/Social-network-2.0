@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "",
   "dependencies": {
+    "@ant-design/icons": "^5.2.6",
     "@storybook/router": "^7.6.6",
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "12.0.0",

@@ -1,73 +1,90 @@
 import React, {ChangeEvent, useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import {dialogsApi} from "../../api/api-dialogs";
-import {actions, MessagesPageStateType, sendMessageTC} from "../../redux/messages-reducer";
+import {
+    actions,
+    filterMessagesTC,
+    MessagesPageStateType,
+    sendMessageTC,
+    setMessagesWithUserTC
+} from "../../redux/messages-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../redux/redux-store";
 import {Message} from "./Message";
 import styled from "styled-components";
 import unknown from "../../assets/images/UnknowIcon.svg";
-import {Button, Input} from "antd";
+import {Button, DatePicker, DatePickerProps, Input} from "antd";
 
 const { TextArea } = Input;
 
 
 export const MessagesWithUser = () => {
 
-    const dispatch = useDispatch()
-    const messagesState=useSelector<RootStateType,MessagesPageStateType>(state=>state.messagesPage)
+    const [filterDate, setFilterDate] = useState<string>("")
 
-    const userId = useParams<{ id: "string" }>();
-    useEffect(()=>{dispatch(actions.setUserIdForMessaging(+userId.id));},[])
+    const dispatch = useDispatch()
+    const {dialogs,userIdForMessaging,messagesWithUser,newMessageText}=useSelector<RootStateType,MessagesPageStateType>(state=>state.messagesPage)
+    const {id} = useParams<{ id: "string" }>();
 
     useEffect(() => {
+dispatch(setMessagesWithUserTC(+id))
+    }, [userIdForMessaging])
 
-        (async () => {
-            if(messagesState.userIdForMessaging){
-                let res = await dialogsApi.putDialogWithUserInTopOfList(messagesState.userIdForMessaging)
-                if (res.resultCode === 0) {
-                    let response = await dialogsApi.getDialogWithUser(messagesState.userIdForMessaging, 1, 10)
-                    dispatch(actions.setMessagesWithUser(response.items))
-                }
-            }
-        })()
-
-    }, [messagesState.userIdForMessaging])
-
-    useEffect(()=>{
-        if(messagesState.dialogs.length===0) {
-            (async () => {
-                let response = await dialogsApi.getDialogs()
-                dispatch(actions.setDialogs(response))
-            }) ()
-        }
-    },[])
 
     const onChangeTextareaHandler=(e:ChangeEvent<HTMLTextAreaElement>)=>{
         dispatch(actions.setNewMessageText(e.currentTarget.value))
     }
     const SendMessageHandler=()=>{dispatch(sendMessageTC())}
 
+    const messageFilterChangeHandler: DatePickerProps['onChange'] = (date,dateString) => {
+        if(new Date(dateString).getTime() < new Date().getTime()){
+            setFilterDate(dateString);
+        }
+    };
+    const filterMessageHandler= ()=>{
+        if (userIdForMessaging && filterDate) {
+            dispatch(filterMessagesTC(userIdForMessaging,filterDate))
+        }
+    }
+const filterAllMessageHandler = ()=> {
+        if(userIdForMessaging) {
+            dispatch(setMessagesWithUserTC(userIdForMessaging))
+        }
+}
     return (<>
             <MessagesTitle>Messaging with :</MessagesTitle>
-    {messagesState.dialogs.length > 0 && <TitleMessaging>
-        <UserPhoto src = {messagesState.dialogs.
-        filter(u=>u.id===messagesState.userIdForMessaging)[0].photos.small ? messagesState.dialogs.
-        filter(u=>u.id===messagesState.userIdForMessaging)[0].photos.small  : unknown} alt={"user photo here"}/>
+    {messagesWithUser.length > 0 ?
+        <TitleMessaging>
+        <UserPhoto src = {dialogs.
+        filter(u=>u.id===userIdForMessaging)[0].photos.small ? dialogs.
+        filter(u=>u.id===userIdForMessaging)[0].photos.small  : unknown} alt={"user photo here"}/>
         <InfoWrapper>
-            <h3>{messagesState.dialogs.
-            filter(u=>u.id===messagesState.userIdForMessaging)[0].userName}</h3>
-            <Prescription>Last Activity: {messagesState.dialogs.
-            filter(u=>u.id===messagesState.userIdForMessaging)[0].lastUserActivityDate.slice(0,10)+" "+messagesState.dialogs.
-            filter(u=>u.id===messagesState.userIdForMessaging)[0].lastUserActivityDate.slice(11,19)}</Prescription>
+            <h3>{dialogs.filter(u=>u.id===userIdForMessaging)[0].userName}</h3>
+            <Prescription>Last Activity: {dialogs.
+            filter(u=>u.id===userIdForMessaging)[0].lastUserActivityDate.slice(0,10)+" "+dialogs.
+            filter(u=>u.id===userIdForMessaging)[0].lastUserActivityDate.slice(11,19)}</Prescription>
         </InfoWrapper>
-    </TitleMessaging> }
+            <Filter>
+                <DatePicker onChange={messageFilterChangeHandler} />
+                <Button type="primary" onClick={filterMessageHandler}>
+                   Filter
+                </Button>
+                <Button type="primary" onClick={filterAllMessageHandler}>
+                    All
+                </Button>
+            </Filter>
+    </TitleMessaging> :
+        <TitleMessaging>
+            <UserPhoto src = {unknown} alt={"user photo here"}/>
+            <InfoWrapper>
+                <h3>Unknown with id {id} </h3>
+            </InfoWrapper>
+        </TitleMessaging>}
         <MessagesList>
-            {messagesState.messagesWithUser.map(m => <Message key={m.id} message={m} photo={messagesState.dialogs.
-            filter(u=>u.id===messagesState.userIdForMessaging)[0].photos.small}/>)}
+            {messagesWithUser.length>0 && messagesWithUser.map(m => <Message key={m.id} message={m} photo={dialogs.
+            filter(u=>u.id===userIdForMessaging)[0].photos.small}/>)}
             <TextAreaWrapper>
                 <TextArea
-                    value={messagesState.newMessageText}
+                    value={newMessageText}
                     onChange={onChangeTextareaHandler}
                     placeholder="Type your message..."
                     autoSize={{ minRows: 3, maxRows: 5 }}
@@ -134,4 +151,8 @@ align-items: center;
     align-self: end;
     width: 20%;
    }
+`
+const Filter = styled.div`
+display: flex;
+  gap: 5px;
 `

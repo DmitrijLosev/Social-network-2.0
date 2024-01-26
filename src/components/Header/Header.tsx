@@ -1,8 +1,7 @@
 import React, {useEffect} from "react";
 import logo from "../../assets/images/MainLogo.svg";
 import styled, {css} from "styled-components";
-import {dialogsApi} from "../../api/api-dialogs";
-import {actions} from "../../redux/messages-reducer";
+import {setNewMessagesCountTC} from "../../redux/messages-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../redux/redux-store";
 import {NavLink} from "react-router-dom";
@@ -12,20 +11,10 @@ export const Header = () => {
     const dispatch = useDispatch()
     const newMessagesCount = useSelector<RootStateType, number>(state => state.messagesPage.newMessagesCount)
     useEffect(() => {
-        (async () => {
-            let response = await dialogsApi.getNewMessagesCount()
-            if (response>0) {
-                dispatch(actions.setNewMessagesCont(response))
-            }
-        })()
+        dispatch(setNewMessagesCountTC())
         let intervalId = setInterval(() => {
-            (async () => {
-                let response = await dialogsApi.getNewMessagesCount()
-                if (response>0) {
-                    dispatch(actions.setNewMessagesCont(response))
-                }
-            })()
-        }, 15000)
+            dispatch(setNewMessagesCountTC())
+        }, 30000)
         return () => {
             clearTimeout(intervalId)
         }

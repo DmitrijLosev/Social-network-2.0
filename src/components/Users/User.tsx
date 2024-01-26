@@ -1,4 +1,4 @@
-import React, {Dispatch, useEffect} from "react";
+import React, {Dispatch} from "react";
 import {actions} from "../../redux/users-reduser";
 import styled from "styled-components";
 import follow from "./../../assets/images/follower.svg"
@@ -7,9 +7,14 @@ import {useDispatch} from "react-redux";
 import {ActionsType} from "../../redux/redux-store";
 import {UserType} from "../../api/api-users";
 import unknown from "../../assets/images/UnknowIcon.svg"
+import message from "../../assets/images/Message.svg"
+import {useHistory} from "react-router-dom";
+
+
 export const User: React.FC<{ user: UserType }> = React.memo(({user}) => {
 
         const dispatch = useDispatch<Dispatch<ActionsType>>()
+        const history = useHistory()
 
         const followButtonHandler = () => {
             dispatch(actions.follow(user.id))
@@ -17,6 +22,11 @@ export const User: React.FC<{ user: UserType }> = React.memo(({user}) => {
         const unfollowButtonHandler = () => {
             dispatch(actions.unfollow(user.id))
         }
+        const startMessagingHandler = () => {
+            history.push(`/messages/${user.id}`)
+        }
+
+
         return (
             <StyledUser>
                 <UserPhoto src={user.photos.small ? user.photos.small : unknown} alt={"user photo here"}/>
@@ -25,10 +35,16 @@ export const User: React.FC<{ user: UserType }> = React.memo(({user}) => {
                     <UserStatus>{user.status}</UserStatus>
                 </UserInfoWrapper>
                 <FollowButtomWrapper>
-                    <StyledFollowButton onClick={followButtonHandler} disabled={user.followed}><img src={follow}
-                                                                                                  alt={"follow button here"}/></StyledFollowButton>
-                    <StyledFollowButton onClick={unfollowButtonHandler} disabled={!user.followed}><img src={unfollow}
-                                                                                                     alt={"unfollow button here"}/></StyledFollowButton>
+                    <StyledFollowButton onClick={followButtonHandler} disabled={user.followed}>
+                        <img src={follow}
+                             alt={"follow button here"}/></StyledFollowButton>
+                    <StyledFollowButton onClick={unfollowButtonHandler} disabled={!user.followed}>
+                        <img src={unfollow}
+                             alt={"unfollow button here"}/></StyledFollowButton>
+                    <StyledFollowButton onClick={startMessagingHandler}>
+                        <img src={message}
+                             alt={"unfollow button here"}/>
+                    </StyledFollowButton>
                 </FollowButtomWrapper>
 
             </StyledUser>
