@@ -68,7 +68,7 @@ export const SentMessageToUserApi = () => {
     useEffect(() => {
 
         (async () => {
-                let data = await dialogsApi.sentMessageToUser(30556,"Hello Dimasik")
+                let data = await dialogsApi.sentMessageToUser(222,"Hello Dimasik")
                 setState(data)
             }
         )()

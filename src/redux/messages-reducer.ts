@@ -10,6 +10,10 @@ const SET_NEW_MESSAGE_TEXT = "MESSAGES/SET-NEW-MESSAGE-TEXT" as const
 const ADD_NEW_MESSAGE = "MESSAGES/ADD-NEW-MESSAGE" as const
 const DELETE_MESSAGE = "MESSAGES/DELETE-MESSAGE" as const
 const IS_MESSAGE_VIEWED = "MESSAGES/IS-MESSAGE-VIEWED" as const
+const SET_FILTER_FOR_DIALOGS = "MESSAGES/SET-FILTER-FOR-DIALOGS" as const
+const SET_COUNT_DIALOGS_PAGE_FOR_SHOW = "MESSAGES/SET-COUNT-DIALOGS-PAGE-FOR-SHOW" as const
+const SET_NUMBER_MESSAGE_PAGE = "MESSAGES/SET-NUMBER_MESSAGE-PAGE" as const
+const SET_MESSAGE_TOTAL_COUNT = "MESSAGES/ SET-MESSAGE-TOTAL-COUNT" as const
 
 
 const initialState = {
@@ -17,7 +21,11 @@ const initialState = {
     newMessagesCount: 0,
     userIdForMessaging: null as number | null,
     messagesWithUser: [] as MessageType[],
-    newMessageText: ""
+    newMessageText: "",
+    countDialogsPageForShow:1,
+    filterForDialogs:"part" as DialogsFilterType,
+   messagesPageNumber:1,
+    totalMessagesCount:0
 }
 
 
@@ -45,6 +53,14 @@ export const messagesReducer = (state: MessagesPageStateType = initialState, act
             return {
                 ...state, messagesWithUser: state.messagesWithUser
                     .map(m => m.id === action.messageId ? {...m,viewed:action.isViewed} : m)}
+        case SET_FILTER_FOR_DIALOGS :
+            return {...state, filterForDialogs: action.filter}
+        case SET_COUNT_DIALOGS_PAGE_FOR_SHOW :
+            return {...state, countDialogsPageForShow: action.count}
+        case SET_NUMBER_MESSAGE_PAGE:
+            return {...state, messagesPageNumber: action.number}
+        case SET_MESSAGE_TOTAL_COUNT:
+            return {...state, totalMessagesCount: action.count}
         default:
             return state
     }
@@ -67,6 +83,14 @@ export const actions = {
         ({type: DELETE_MESSAGE, messageId}) as const,
     setIsMessageViewed: (isViewed: boolean,messageId:string) =>
         ({type: IS_MESSAGE_VIEWED, isViewed, messageId}) as const,
+    setFilterForDialogs: (filter: DialogsFilterType) =>
+        ({type: SET_FILTER_FOR_DIALOGS, filter}) as const,
+    setCountDialogsPageForShow: (count:number) =>
+        ({type: SET_COUNT_DIALOGS_PAGE_FOR_SHOW, count}) as const,
+    setMessagePageNumber: (number:number) =>
+        ({type: SET_NUMBER_MESSAGE_PAGE, number}) as const,
+    setTotalMessagesCount: (count:number) =>
+        ({type: SET_MESSAGE_TOTAL_COUNT, count}) as const,
 }
 
 export const sendMessageTC = () => async (dispatch: ThunkDispatch<RootStateType, unknown, ActionsType>, getState: () => RootStateType) => {
@@ -88,8 +112,9 @@ export const setMessagesWithUserTC = (userId: number) => async (dispatch: ThunkD
         let response = await dialogsApi.getDialogs()
         dispatch(actions.setDialogs(response))
     }
-    let response = await dialogsApi.getDialogWithUser(userId, 1, 10)
+    let response = await dialogsApi.getDialogWithUser(userId, getState().messagesPage.messagesPageNumber, 10)
     dispatch(actions.setMessagesWithUser(response.items))
+    dispatch(actions.setTotalMessagesCount(response.totalCount))
 }
 
 export const setDialogsTC = () => async (dispatch: ThunkDispatch<RootStateType, unknown, ActionsType>) => {
@@ -129,9 +154,10 @@ export const filterMessagesTC = (userID:number,filterDate: string) =>
     async (dispatch: ThunkDispatch<RootStateType, unknown, ActionsType>) => {
         let response = await dialogsApi.getMessageAfterThisDate(userID,filterDate);
        dispatch(actions.setMessagesWithUser(response))
+        dispatch(actions.setTotalMessagesCount(response.length))
     }
 
-
+export type DialogsFilterType = "part" | "all"
 export type MessagesPageStateType = typeof initialState
 export type MessagesActionType =
     ReturnType<typeof actions.setDialogs>
@@ -142,3 +168,7 @@ export type MessagesActionType =
     | ReturnType<typeof actions.addNewMessage>
     | ReturnType<typeof actions.deleteMessage>
     | ReturnType<typeof actions.setIsMessageViewed>
+    | ReturnType<typeof actions.setFilterForDialogs>
+    | ReturnType<typeof actions.setCountDialogsPageForShow>
+    | ReturnType<typeof actions.setMessagePageNumber>
+    | ReturnType<typeof actions. setTotalMessagesCount>
