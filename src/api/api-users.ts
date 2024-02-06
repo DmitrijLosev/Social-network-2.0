@@ -1,21 +1,23 @@
-const Base_Url = "https://social-network.samuraijs.com/api/1.0" as const
+import {fetchInstance} from "./fetchInstance";
+import {ResponseType} from "./api-dialogs";
 
-const settings = {
-    method: "GET",
-    credentials: "include" as const,
-    headers: {
-        "Content-Type": "application/json;charset=utf-8",
-        "API-KEY": "99e456ee-d6c6-4a9b-9a62-843b8099abfe"
-    }
-}
-const getResponse = async (response: Promise<Response>) => {
-    let res = await response;
-    return res.json()
-}
+const {base_Url,settings,getResponse} = fetchInstance()
 
 export const usersApi = {
     getUsers(count:number,pageNumber:number):Promise< GetItemsResponseType<UserType[]>> {
-        return getResponse(fetch(`${Base_Url}/users?count=${count}&page=${pageNumber} `, settings))
+        return getResponse(fetch(`${base_Url}/users?count=${count}&page=${pageNumber}`, settings))
+    },
+    followUser(userId:number):Promise<ResponseType> {
+        return getResponse(fetch(`${base_Url}/follow/${userId}`,{
+            ...settings,
+            method: "POST"
+        }))
+    },
+    unfollowUser(userId:number):Promise<ResponseType> {
+        return getResponse(fetch(`${base_Url}/follow/${userId}`,{
+            ...settings,
+            method: "DELETE"
+        }))
     }
 }
 export type GetItemsResponseType<I={}> = {

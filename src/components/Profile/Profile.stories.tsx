@@ -1,14 +1,13 @@
-import {action} from "@storybook/addon-actions"
 import {Profile} from "./Profile";
 import React from "react";
 import {BrowserRouter} from "react-router-dom";
-import {Provider} from "react-redux";
-import {store} from "../../redux/redux-store";
 import {GlobalStyles} from "../styles/Global.styles";
+import {ReduxStoreProviderDecorator} from "../../stories/ReduxStoreProviderDecorator";
 
 
 export default {
     component: Profile,
+    decorators:ReduxStoreProviderDecorator
 };
 
 
@@ -27,10 +26,8 @@ const callback = action("some item was clicked")*/
 export const ProfilePage = () => {
 
     return <BrowserRouter>
-        <Provider store={store}>
             <Profile/>
             <GlobalStyles/>
-        </Provider>
     </BrowserRouter>
 };
 

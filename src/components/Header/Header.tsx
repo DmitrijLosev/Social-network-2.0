@@ -5,15 +5,43 @@ import {setNewMessagesCountTC} from "../../redux/messages-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../redux/redux-store";
 import {NavLink} from "react-router-dom";
+import {Preloader} from "../Commons/Preloader/Preloader";
+import {authApi} from "../../api/api-auth";
+import {actions} from "../../redux/auth-reducer";
+import {profileApi} from "../../api/api-profile";
+import {AuthInfo} from "./AuthInfo/AuthInfo";
 
 export const Header = () => {
 
     const dispatch = useDispatch()
     const newMessagesCount = useSelector<RootStateType, number>(state => state.messagesPage.newMessagesCount)
+    const isFetching = useSelector<RootStateType, boolean>(state => state.appPage.isFetching)
+    const isAuth = useSelector<RootStateType, boolean>(state => state.authPage.isAuth)
+
+
     useEffect(() => {
-        dispatch(setNewMessagesCountTC())
-        let intervalId = setInterval(() => {
+
+        (async () => {
+            let res = await authApi.getAuth()
+            if (res.resultCode === 0) {
+                dispatch(actions.setIsAuth(true, res.data))
+                let res2 = await profileApi.getProfile(res.data.id)
+                dispatch(actions.setOwnerProfile(res2))
+            } else {
+                dispatch(actions.setIsAuth(false))
+            }
+        })()
+
+    }, [])
+
+    useEffect(() => {
+        if(isAuth) {
             dispatch(setNewMessagesCountTC())
+        }
+        let intervalId = setInterval(() => {
+            if(isAuth) {
+                dispatch(setNewMessagesCountTC())
+            }
         }, 30000)
         return () => {
             clearTimeout(intervalId)
@@ -25,11 +53,15 @@ export const Header = () => {
         <StyledHeader>
             <HeaderWrapper>
                 <Logo src={logo} alt={"Logo is here"}/>
-                <NavLink to={"/messages"}>
-                    <TextCountMessage>New messages:  <MessageCount isMessages={newMessagesCount > 0}>{newMessagesCount}
-                        </MessageCount>
+                {isAuth && <NavLink to={"/messages"}>
+                    <TextCountMessage>New messages: <MessageCount isMessages={newMessagesCount > 0}>{newMessagesCount}
+                    </MessageCount>
                     </TextCountMessage>
-                    </NavLink>
+                </NavLink> }
+               <PositionWrapper>
+                   {isFetching && <Preloader/>}
+               </PositionWrapper>
+                <AuthInfo/>
             </HeaderWrapper>
         </StyledHeader>
     );
@@ -52,8 +84,10 @@ const StyledHeader = styled.header`
 const HeaderWrapper = styled.div`
   height: 100%;
   display: flex;
-  justify-content: start;
+  justify-content: space-around;
   align-items: center;
+  gap: 80px;
+  position:relative
 `
 const TextCountMessage = styled.h4`
   padding-left: 50px;
@@ -65,3 +99,5 @@ const MessageCount = styled.span<{ isMessages: boolean }>`
     color: crimson;
   `}
 `
+const PositionWrapper = styled.div`
+position: relative`

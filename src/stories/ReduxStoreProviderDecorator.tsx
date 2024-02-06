@@ -1,38 +1,56 @@
 import {Provider} from "react-redux";
-import {combineReducers, createStore} from "redux";
+import {applyMiddleware, combineReducers, createStore} from "redux";
 import {PostType, profileReducer} from "../redux/profile-reducer";
-import {dialogReducer, DialogUserType, MessageType} from "../redux/dialog-reducer";
+import {usersReducer} from "../redux/users-reduser";
+import {DialogsFilterType, messagesReducer} from "../redux/messages-reducer";
+import {UserType} from "../api/api-users";
+import {DialogsType, MessageType} from "../api/api-dialogs";
+import thunk from "redux-thunk";
+import {appReducer} from "../redux/app-reducer";
+import {ProfileType} from "../api/api-profile";
+import {authReducer} from "../redux/auth-reducer";
+
 
 const rootReducer = combineReducers({
     profilePage: profileReducer,
-    dialogsPage: dialogReducer
+    usersPage: usersReducer,
+    messagesPage: messagesReducer,
+    appPage: appReducer,
+    authPage:authReducer
 })
 
-const initialAppState= {
+const initialAppState = {
     posts: [
         {id: 1, post: "Hello! It's my first post!", likesCount: 10, dislikesCount: 0},
         {id: 2, post: "How are you?", likesCount: 19, dislikesCount: 2},
         {id: 3, post: "JS is the power of magic!", likesCount: 11, dislikesCount: 5},
     ] as PostType[],
     typingPostText: "",
-    dialogUsers: [
-        {id: 1, name: "Dima"},
-        {id: 2, name: "Tanya"},
-        {id: 3, name: "Misha"},
-        {id: 4, name: "Igor"},
-    ] as DialogUserType[],
-    messages: [
-        {id: 1, message: "Hello!"},
-        {id: 2, message: "How are you?"},
-        {id: 3, message: "How's your business?"},
-        {id: 4, message: "What are news?"}
-    ] as MessageType[],
-    typingDialogMessage: ""
+    users: [] as UserType[],
+    totalUsersCount: 0,
+    pageSize: 10,
+    currentPage: 1,
+    dialogs: [] as DialogsType[],
+    newMessagesCount: 0,
+    userIdForMessaging: null as number | null,
+    messagesWithUser: [] as MessageType[],
+    newMessageText: "",
+    countDialogsPageForShow: 1,
+    filterForDialogs: "part" as DialogsFilterType,
+    messagesPageNumber: 1,
+    totalMessagesCount: 0,
+    isFetching: false,
+    profile:{} as ProfileType,
+    isAuth: false,
+    ownerId:null as number | null,
+    ownerEmail:null as string | null,
+    ownerLogin:null as string | null,
+    ownerProfile:null as ProfileType | null
 }
 
-export type RootStateType=ReturnType<typeof rootReducer>
+export type RootStateType = ReturnType<typeof rootReducer>
 
-const storyBookStore = createStore(rootReducer,  initialAppState as RootStateType & undefined )
+const storyBookStore = createStore(rootReducer, initialAppState as RootStateType & undefined, applyMiddleware(thunk))
 
 export const ReduxStoreProviderDecorator = (storyFn: any) => {
     return <Provider store={storyBookStore}>{storyFn()}</Provider>

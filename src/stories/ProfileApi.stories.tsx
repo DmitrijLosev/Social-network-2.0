@@ -1,11 +1,12 @@
 import {useEffect, useState} from "react";
-import {usersApi} from "../api/api-users";
+import {profileApi} from "../api/api-profile";
+
 
 
 
 
 export default {
-    title: "API/UsersApi",
+    title: "API/ProfileApi",
 };
 
 
@@ -26,7 +27,7 @@ export const GetUsersApi = () => {
     useEffect(() => {
 
         (async () => {
-                let data = await usersApi.getUsers(100,2)
+                let data = await profileApi.getProfile(3211)
                 setState(data)
             }
         )()

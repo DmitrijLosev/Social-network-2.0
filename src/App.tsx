@@ -5,7 +5,6 @@ import {Header} from "./components/Header/Header";
 import {Navbar} from "./components/Navbar/Navbar";
 import {Profile} from "./components/Profile/Profile";
 import {Footer} from "./components/Footer/Footer";
-import {Dialogs} from "./components/Dialogs/Dialogs";
 import {BrowserRouter, Route} from "react-router-dom";
 import {Users} from "./components/Users/Users";
 import {Music} from "./components/Music/Music";
@@ -13,6 +12,7 @@ import {News} from "./components/News/News";
 import {Settings} from "./components/Settings/Settings";
 import {DialogsPage} from "./components/Messages/DialogsPage";
 import {MessagesWithUser} from "./components/Messages/MessagesWithUser";
+import {Login} from "./components/Login/Login";
 
 
 
@@ -26,10 +26,8 @@ export const App: React.FC= () => {
                 <Header/>
                 <Navbar/>
                 <StyledMain>
-                    <Route path="/profile"
+                    <Route path="/profile/:id?"
                            render={() => < Profile />}/>
-                    <Route path="/dialogs"
-                           render={() => <Dialogs />}/>
                     <Route exact path="/messages"
                            render={() => <DialogsPage />}/>
                     <Route path="/messages/:id"
@@ -38,6 +36,7 @@ export const App: React.FC= () => {
                     <Route path="/music" render={() => <Music/>}/>
                     <Route path="/settings" render={() => <Settings/>}/>
                     <Route path="/news" render={() => <News/>}/>
+                    <Route path="/login" render={() => <Login/>}/>
                 </StyledMain>
                 <Footer/>
             </MainWrapper>

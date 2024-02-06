@@ -54,7 +54,7 @@ export const GetDialogWithUserApi = () => {
     useEffect(() => {
 
         (async () => {
-                let data = await dialogsApi.getDialogWithUser(29181,1,10)
+                let data = await dialogsApi.getDialogWithUser(10,1,10)
                 setState(data)
             }
         )()

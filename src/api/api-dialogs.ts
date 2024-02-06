@@ -1,19 +1,7 @@
-import {GetItemsResponseType, UserType} from "./api-users";
+import {GetItemsResponseType} from "./api-users";
+import {fetchInstance} from "./fetchInstance";
 
-const base_Url = "https://social-network.samuraijs.com/api/1.0" as const
-
-const settings = {
-    method: "GET",
-    credentials: "include" as const,
-    headers: {
-        "Content-Type": "application/json;charset=utf-8",
-        "API-KEY": "99e456ee-d6c6-4a9b-9a62-843b8099abfe"
-    }
-}
-const getResponse = async (response: Promise<Response>) => {
-    let res = await response;
-    return res.json()
-}
+const {base_Url,settings,getResponse} = fetchInstance()
 
 export const dialogsApi = {
     getDialogs():Promise<DialogsType[]> {
@@ -62,7 +50,7 @@ export type DialogsType = {
     newMessagesCount:number
     photos:{small:string,large:string}
 }
-type ResponseType<D={}>={
+export type ResponseType<D={}>={
     data:D
     messages:string[]
     fieldsErrors:string[]

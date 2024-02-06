@@ -13,8 +13,7 @@ export const Navbar = () => {
                 <NavLinkList>
                     <li><StyledNavLink to="/profile">Profile</StyledNavLink></li>
                     {newMessagesCount > 0 ? <li><StyledNavLink to="/messages">Dialogs <MessageCount>({newMessagesCount})</MessageCount></StyledNavLink></li> :
-                    <li><StyledNavLink to="/messages">Dialogs</StyledNavLink></li>}
-                    <li><StyledNavLink to="/dialogs">Messages</StyledNavLink></li>
+                    <li><StyledNavLink to="/messages">Message</StyledNavLink></li>}
                     <li><StyledNavLink to="/users">Users</StyledNavLink></li>
                     <li><StyledNavLink to="/music">Music</StyledNavLink></li>
                     <li><StyledNavLink to="/settings">Settings</StyledNavLink></li>

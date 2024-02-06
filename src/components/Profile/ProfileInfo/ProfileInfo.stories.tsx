@@ -5,10 +5,12 @@ import {BrowserRouter} from "react-router-dom";
 import {Provider} from "react-redux";
 import {store} from "../../../redux/redux-store";
 import {GlobalStyles} from "../../styles/Global.styles";
+import {ReduxStoreProviderDecorator} from "../../../stories/ReduxStoreProviderDecorator";
 
 
 export default {
     component: ProfileInfo,
+    decorators:ReduxStoreProviderDecorator
 };
 
 
@@ -27,10 +29,27 @@ const callback = action("some item was clicked")*/
 export const profileInfo = () => {
 
     return <BrowserRouter>
-        <Provider store={store}>
-            <ProfileInfo/>
+            <ProfileInfo profile={{
+                aboutMe: "я круто чувак 1001%",
+                contacts: {
+                facebook: "facebook.com",
+                website: null,
+                vk: "vk.com/dimych",
+                twitter: "https://twitter.com/@sdf",
+                instagram: "instagra.com/sds",
+                youtube: null,
+                github: "github.com",
+                mainLink: null
+            },
+                lookingForAJob: true,
+                lookingForAJobDescription: "не ищу, а дурачусь",
+                fullName: "samurai dimych",
+                userId: 2,
+                photos: {
+                small: "https://social-network.samuraijs.com/activecontent/images/users/2/user-small.jpg?v=0",
+                large: "https://social-network.samuraijs.com/activecontent/images/users/2/user.jpg?v=0"}
+            }}/>
             <GlobalStyles/>
-        </Provider>
     </BrowserRouter>
 };
 

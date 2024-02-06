@@ -1,11 +1,14 @@
 import {action} from "@storybook/addon-actions"
 import {Header} from "./Header";
 import React from "react";
+import {ReduxStoreProviderDecorator} from "../../stories/ReduxStoreProviderDecorator";
+import {BrowserRouter} from "react-router-dom";
 
 
 
 export default {
     component: Header,
+    decorators:ReduxStoreProviderDecorator
 };
 
 
@@ -23,6 +26,6 @@ export const FirstStory: Story = {
 const callback = action("some item was clicked")*/
 export const OnlyHeader = () => {
 
-    return <Header/>
+    return <BrowserRouter><Header/></BrowserRouter>
 };
 

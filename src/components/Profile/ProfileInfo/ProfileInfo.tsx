@@ -1,12 +1,21 @@
 import React from "react";
 import styled from "styled-components";
+import {ProfileType} from "../../../api/api-profile";
+import unknown from "../../../assets/images/UnknowIcon.svg"
 
-export const ProfileInfo = () => {
-    return (
-        <ProfileWrapper>
-            <div>ProfilePhoto</div>
-            <div>ProfileInfo</div>
-        </ProfileWrapper>
+type ProfileInfoPropsType = {
+    profile:ProfileType | null
+}
+
+export const ProfileInfo:React.FC<ProfileInfoPropsType> = ({profile}) => {
+
+    return (<>
+            {profile ?  <ProfileWrapper>
+                <div><img src={profile.photos.large ? profile.photos.large : unknown} alt={"profile photo here"}/></div>
+                <div>{profile.fullName}</div>
+            </ProfileWrapper> :  <div>ProfileInfo</div>}
+
+        </>
     );
 };
 

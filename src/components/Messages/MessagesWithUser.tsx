@@ -27,7 +27,8 @@ export const MessagesWithUser = () => {
         userIdForMessaging,
         messagesWithUser,
         newMessageText,
-        totalMessagesCount
+        totalMessagesCount,
+        partisipantProfile
     } =
         useSelector<RootStateType, MessagesPageStateType>(state => state.messagesPage)
     const {id} = useParams<{ id: "string" }>();
@@ -59,56 +60,53 @@ export const MessagesWithUser = () => {
             dispatch(setMessagesWithUserTC(userIdForMessaging))
         }
     }
-    const onPaginationChange: PaginationProps["onChange"] = ( pageNumber) => {
+    const onPaginationChange: PaginationProps["onChange"] = (pageNumber) => {
         dispatch(actions.setMessagePageNumber(pageNumber))
         if (userIdForMessaging) {
             dispatch(setMessagesWithUserTC(userIdForMessaging))
         }
     };
+    const photo = partisipantProfile && partisipantProfile.photos.small && partisipantProfile.photos.small
     return (<>
             <MessagesTitle>Messaging with :</MessagesTitle>
-            {messagesWithUser.length > 0 ?
-                <TitleMessaging>
-                    <UserPhoto
-                        src={dialogs.filter(u => u.id === userIdForMessaging)[0].photos.small ? dialogs.filter(u => u.id === userIdForMessaging)[0].photos.small : unknown}
-                        alt={"user photo here"}/>
-                    <InfoWrapper>
-                        <h3>{dialogs.filter(u => u.id === userIdForMessaging)[0].userName}</h3>
+            <TitleMessaging>
+                <UserPhoto
+                    src={partisipantProfile && partisipantProfile.photos.small ? partisipantProfile.photos.small : unknown}
+                    alt={"user photo here"}/>
+                <InfoWrapper>
+                    <h3>{partisipantProfile && partisipantProfile.fullName}</h3>
+                    {messagesWithUser.length > 0 &&
                         <Prescription>Last
-                            Activity: {dialogs.filter(u => u.id === userIdForMessaging)[0].lastUserActivityDate.slice(0, 10) + " " + dialogs.filter(u => u.id === userIdForMessaging)[0].lastUserActivityDate.slice(11, 19)}</Prescription>
-                    </InfoWrapper>
-                    <Filter>
-                        <DatePicker onChange={messageFilterChangeHandler}/>
-                        <Button type="primary" onClick={filterMessageHandler}>
-                            Filter
-                        </Button>
-                        <Button type="primary" onClick={filterAllMessageHandler}>
-                            All
-                        </Button>
-                    </Filter>
-                </TitleMessaging> :
-                <TitleMessaging>
-                    <UserPhoto src={unknown} alt={"user photo here"}/>
-                    <InfoWrapper>
-                        <h3>Unknown with id {id} </h3>
-                    </InfoWrapper>
-                </TitleMessaging>}
+                            Activity: {dialogs.filter(u => u.id === userIdForMessaging)[0].lastUserActivityDate.slice(0, 10) + " " + dialogs.filter(u => u.id === userIdForMessaging)[0].lastUserActivityDate.slice(11, 19)}
+                        </Prescription>}
+                </InfoWrapper>
+                <Filter>
+                    <DatePicker onChange={messageFilterChangeHandler}/>
+                    <Button type="primary" onClick={filterMessageHandler}>
+                        Filter
+                    </Button>
+                    <Button type="primary" onClick={filterAllMessageHandler}>
+                        All
+                    </Button>
+                </Filter>
+            </TitleMessaging>
             <MessagesList>
                 <ConfigProvider
                     theme={{
                         components: {
                             Pagination: {
-                                itemActiveBg:"lightblue",
-                                colorBgContainer:"lightskyblue",
-                                colorBorder:"transparent",
+                                itemActiveBg: "lightblue",
+                                colorBgContainer: "lightskyblue",
+                                colorBorder: "transparent",
                             },
                         },
                     }}
                 >
-                <Pagination defaultCurrent={1} pageSize={10} total={totalMessagesCount} onChange={onPaginationChange}/>
+                    <Pagination defaultCurrent={1} pageSize={10} total={totalMessagesCount}
+                                onChange={onPaginationChange}/>
                 </ConfigProvider>
                 {messagesWithUser.length > 0 && messagesWithUser.map(m => <Message key={m.id} message={m}
-                                                                                   photo={dialogs.filter(u => u.id === userIdForMessaging)[0].photos.small}/>)}
+                                                                                   photo={photo}/>)}
                 <TextAreaWrapper>
                     <TextArea
                         value={newMessageText}
@@ -164,9 +162,10 @@ const MessagesList = styled.ul`
   gap: 10px;
   padding: 10px;
   align-items: start;
-ul {
-  align-self: center;
-}
+
+  ul {
+    align-self: center;
+  }
 `
 const TextAreaWrapper = styled.div`
   width: 100%;

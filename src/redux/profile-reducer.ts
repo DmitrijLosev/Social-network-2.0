@@ -1,4 +1,5 @@
 import {ActionsType} from "./redux-store";
+import {ProfileType} from "../api/api-profile";
 
 
 const ADD_POST = "PROFILE/ADD-POST" as const
@@ -6,7 +7,7 @@ const CHANGE_POST = "PROFILE/CHANGE-POST" as const
 const LIKE_POST = "PROFILE/LIKE-POST" as const
 const DISLIKE_POST = "PROFILE/DISLIKE-POST" as const
 const DELETE_POST = "PROFILE/DELETE-POST" as const
-
+const SET_PROFILE = "PROFILE/SET-PROFILE" as const
 
 const initialState = {
     posts: [
@@ -15,6 +16,7 @@ const initialState = {
         {id: 3, post: "JS is the power of magic!", likesCount: 11, dislikesCount: 5},
     ] as PostType[],
     typingPostText: "",
+    profile:null as ProfileType | null
 }
 
 export const profileReducer = (state: ProfilePageStateType = initialState, action: ActionsType): ProfilePageStateType => {
@@ -42,6 +44,8 @@ export const profileReducer = (state: ProfilePageStateType = initialState, actio
                     {...p, dislikesCount:p.dislikesCount+1} : p)}
         case DELETE_POST:
             return {...state,posts: state.posts.filter(p=>p.id !== action.postId)}
+        case SET_PROFILE:
+            return {...state,profile: action.profile}
         default:
             return state
 
@@ -52,7 +56,8 @@ export const actions = {
     changePost:(typingPostText: string)=>({type: CHANGE_POST, typingPostText}) as const,
     likePost: (postId: number) => ({type: LIKE_POST, postId}) as const,
     dislikePost: (postId: number) => ({type: DISLIKE_POST, postId}) as const,
-    deletePost: (postId: number) => ({type: DELETE_POST, postId}) as const
+    deletePost: (postId: number) => ({type: DELETE_POST, postId}) as const,
+    setProfile:(profile:ProfileType)=>({type: SET_PROFILE, profile}) as const
 }
 
 export type PostType = {
@@ -62,4 +67,4 @@ export type PostType = {
     dislikesCount: number
 }
 export type ProfilePageStateType = typeof initialState;
-export type ProfileActionsType = typeof actions.addPost | ReturnType<typeof actions.changePost> | ReturnType<typeof actions.likePost> | ReturnType<typeof actions.dislikePost> | ReturnType<typeof actions.deletePost>
+export type ProfileActionsType = typeof actions.addPost | ReturnType<typeof actions.changePost> | ReturnType<typeof actions.likePost> | ReturnType<typeof actions.dislikePost> | ReturnType<typeof actions.deletePost> | ReturnType<typeof actions.setProfile>

@@ -1,32 +1,33 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {MessageType} from "../../api/api-dialogs";
 import styled, {css} from "styled-components";
 import unknown from "../../assets/images/UnknowIcon.svg";
 import {Button} from "antd";
 import {DeleteOutlined, ReloadOutlined} from "@ant-design/icons";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {deleteMessageTC, isMessageViewedTC} from "../../redux/messages-reducer";
+import {RootStateType} from "../../redux/redux-store";
+import {ProfileType} from "../../api/api-profile";
 
-export const Message: React.FC<{ message: MessageType, photo: string }> = ({message, photo}) => {
+export const Message: React.FC<{ message: MessageType, photo: string | null }> = ({message, photo}) => {
 
-    const [authUserId, setAuthUserId] = useState(0)
-const dispatch = useDispatch()
-    useEffect(() => {
-        fetch("https://social-network.samuraijs.com/api/1.1/auth/me", {credentials: "include"}).then(res => res.json()).then(res => setAuthUserId(res.data.id))
-    }, [])
-const deleteMessageHandler = () => {
+    const dispatch = useDispatch()
+    const ownerProfile = useSelector<RootStateType,ProfileType | null>(state => state.authPage.ownerProfile)
+
+    const deleteMessageHandler = () => {
         dispatch(deleteMessageTC(message.id))
-}
-const checkMessageIsViewedHandler = () => {
-    dispatch(isMessageViewedTC(message.id))
-}
+    }
+    const checkMessageIsViewedHandler = () => {
+        dispatch(isMessageViewedTC(message.id))
+    }
 
-
-
+    const ownerPhoto = ownerProfile && ownerProfile.photos.small ? ownerProfile.photos.small : unknown
+const participantPhoto = photo ? photo : unknown
     return (
-        <MessageItem isSend={authUserId === message.senderId} >
+        <MessageItem isSend={ownerProfile !== null && ownerProfile.userId === message.senderId}>
             <PhotoWrapper>
-                <SenderPhoto src={authUserId === message.senderId ? unknown : photo ? photo : unknown}
+                <SenderPhoto src={ownerProfile !== null && ownerProfile.userId === message.senderId ?
+                    ownerPhoto : participantPhoto}
                              alt={"sender photo here"}></SenderPhoto>
                 <small>{message.addedAt.slice(0, 10)}</small>
                 <small> {message.addedAt.slice(11, 19)}</small>
@@ -36,16 +37,21 @@ const checkMessageIsViewedHandler = () => {
                 <Name>{message.senderName}</Name>
                 <MessageText> {message.body}</MessageText>
                 <ButtonWrapper>
-                <Button onClick={deleteMessageHandler} shape="circle" size={"small"} icon={<DeleteOutlined rev={undefined} />} />
-                <small>{authUserId === message.senderId && message.viewed && "viewed"} </small>
-                <small>{authUserId === message.senderId && !message.viewed && <><Button shape="circle" size={"small"} icon={<ReloadOutlined rev={undefined} onClick={checkMessageIsViewedHandler}/>} /></>}</small>
+                    <Button onClick={deleteMessageHandler} shape="circle" size={"small"}
+                            icon={<DeleteOutlined rev={undefined}/>}/>
+                    <small>{ownerProfile !== null && ownerProfile.userId === message.senderId&& message.viewed && "viewed"} </small>
+                    <small>{ownerProfile !== null && ownerProfile.userId === message.senderId && !message.viewed && <><Button shape="circle"
+                                                                                            size={"small"}
+                                                                                            icon={<ReloadOutlined
+                                                                                                rev={undefined}
+                                                                                                onClick={checkMessageIsViewedHandler}/>}/></>}</small>
                 </ButtonWrapper>
             </TextWrapper>
         </MessageItem>
     );
 };
 
-const MessageItem = styled.li<{ isSend: boolean}>`
+const MessageItem = styled.li<{ isSend: boolean }>`
   max-width: 70%;
   background-color: lightskyblue;
   border-radius: 20px;
@@ -53,12 +59,14 @@ const MessageItem = styled.li<{ isSend: boolean}>`
   align-items: center;
   gap: 20px;
 
-  ${props => props.isSend && css<{ isSend: boolean}>`
+  ${props => props.isSend && css<{ isSend: boolean }>`
     align-self: end;
     flex-direction: row-reverse;
+
     h3 {
       align-self: end;
     }
+
     ${ButtonWrapper} {
       align-self: start;
     }
@@ -66,7 +74,7 @@ const MessageItem = styled.li<{ isSend: boolean}>`
   small {
     opacity: 80%;
   }
-  
+
 `
 const SenderPhoto = styled.img`
   height: 50px;
@@ -85,19 +93,20 @@ const PhotoWrapper = styled.div`
   padding: 5px;
 `
 const MessageText = styled.p`
-align-self: flex-end ;
+  align-self: flex-end;
 `
 const TextWrapper = styled.div`
   padding: 5px;
   display: flex;
   flex-direction: column;
   align-items: end;
+
   button {
     opacity: 60%;
   }
 `
 const ButtonWrapper = styled.div`
-display: flex;
+  display: flex;
   padding: 5px;
   gap: 3px;
 `
