@@ -2,21 +2,20 @@ import React, {useEffect} from "react";
 import logo from "../../assets/images/MainLogo.svg";
 import styled, {css} from "styled-components";
 import {setNewMessagesCountTC} from "../../redux/messages-reducer";
-import {useDispatch, useSelector} from "react-redux";
-import {RootStateType} from "../../redux/redux-store";
 import {NavLink} from "react-router-dom";
 import {Preloader} from "../Commons/Preloader/Preloader";
 import {authApi} from "../../api/api-auth";
 import {actions} from "../../redux/auth-reducer";
 import {profileApi} from "../../api/api-profile";
 import {AuthInfo} from "./AuthInfo/AuthInfo";
+import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 
 export const Header = () => {
 
-    const dispatch = useDispatch()
-    const newMessagesCount = useSelector<RootStateType, number>(state => state.messagesPage.newMessagesCount)
-    const isFetching = useSelector<RootStateType, boolean>(state => state.appPage.isFetching)
-    const isAuth = useSelector<RootStateType, boolean>(state => state.authPage.isAuth)
+    const dispatch = useAppDispatch()
+    const newMessagesCount = useAppSelector(state => state.messagesPage.newMessagesCount)
+    const isFetching = useAppSelector(state => state.appPage.isFetching)
+    const isAuth = useAppSelector(state => state.authPage.isAuth)
 
 
     useEffect(() => {

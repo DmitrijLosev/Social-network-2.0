@@ -1,11 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import {NavLink} from "react-router-dom";
-import {useSelector} from "react-redux";
-import {RootStateType} from "../../redux/redux-store";
+import {useAppSelector} from "../../redux/hooks";
 
 export const Navbar = () => {
-    const newMessagesCount = useSelector<RootStateType,number>(state=>state.messagesPage.newMessagesCount)
+    const newMessagesCount = useAppSelector(state=>state.messagesPage.newMessagesCount)
 
     return (
         <StyledAside>

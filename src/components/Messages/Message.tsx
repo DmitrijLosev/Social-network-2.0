@@ -4,15 +4,13 @@ import styled, {css} from "styled-components";
 import unknown from "../../assets/images/UnknowIcon.svg";
 import {Button} from "antd";
 import {DeleteOutlined, ReloadOutlined} from "@ant-design/icons";
-import {useDispatch, useSelector} from "react-redux";
 import {deleteMessageTC, isMessageViewedTC} from "../../redux/messages-reducer";
-import {RootStateType} from "../../redux/redux-store";
-import {ProfileType} from "../../api/api-profile";
+import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 
 export const Message: React.FC<{ message: MessageType, photo: string | null }> = ({message, photo}) => {
 
-    const dispatch = useDispatch()
-    const ownerProfile = useSelector<RootStateType,ProfileType | null>(state => state.authPage.ownerProfile)
+    const dispatch = useAppDispatch()
+    const ownerProfile = useAppSelector(state => state.authPage.ownerProfile)
 
     const deleteMessageHandler = () => {
         dispatch(deleteMessageTC(message.id))

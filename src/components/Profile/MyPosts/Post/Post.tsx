@@ -1,14 +1,13 @@
-import React, {Dispatch} from "react";
+import React from "react";
 import smallUnknownPhoto from "./../../../../assets/images/UnknowIcon.svg"
 import styled from "styled-components";
 import {Icon} from "../../../Commons/Icon/Icon";
 import {actions, PostType} from "../../../../redux/profile-reducer";
-import {useDispatch} from "react-redux";
-import {ActionsType} from "../../../../redux/redux-store";
+import {useAppDispatch} from "../../../../redux/hooks";
 
 export const Post: React.FC<{post:PostType }> =
     ({post}) => {
-    const dispatch=useDispatch<Dispatch<ActionsType>>()
+    const dispatch=useAppDispatch()
         const likeClickHandler = () => {
             dispatch(actions.likePost(post.id))
         }

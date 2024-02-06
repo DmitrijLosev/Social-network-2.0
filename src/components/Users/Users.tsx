@@ -1,16 +1,15 @@
-import React, {Dispatch, useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {ActionsType, RootStateType} from "../../redux/redux-store";
-import {actions, UsersPageStateType} from "../../redux/users-reduser";
+import React, {useEffect} from "react";
+import {actions} from "../../redux/users-reducer";
 import {User} from "./User";
 import styled from "styled-components";
 import {usersApi} from "../../api/api-users";
 import {ConfigProvider, Pagination, PaginationProps} from "antd";
 import {commonActions} from "../../redux/app-reducer";
+import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 
 export const Users = () => {
-    const {users,totalUsersCount,pageSize,currentPage} = useSelector<RootStateType, UsersPageStateType>(state => state.usersPage)
-    const dispatch = useDispatch<Dispatch<ActionsType>>()
+    const {users,totalUsersCount,pageSize,currentPage} = useAppSelector(state => state.usersPage)
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
 

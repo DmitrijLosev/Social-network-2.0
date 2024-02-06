@@ -1,20 +1,19 @@
-import React, {Dispatch} from "react";
-import {actions} from "../../redux/users-reduser";
+import React from "react";
+import {actions} from "../../redux/users-reducer";
 import styled from "styled-components";
 import follow from "./../../assets/images/follower.svg"
 import unfollow from "./../../assets/images/unfollower.svg"
-import {useDispatch} from "react-redux";
-import {ActionsType} from "../../redux/redux-store";
 import {usersApi, UserType} from "../../api/api-users";
 import unknown from "../../assets/images/UnknowIcon.svg"
 import message from "../../assets/images/Message.svg"
 import {NavLink, useHistory} from "react-router-dom";
 import {commonActions} from "../../redux/app-reducer";
+import {useAppDispatch} from "../../redux/hooks";
 
 
 export const User: React.FC<{ user: UserType }> = React.memo(({user}) => {
 
-        const dispatch = useDispatch<Dispatch<ActionsType>>()
+        const dispatch = useAppDispatch()
         const history = useHistory()
 
         const followButtonHandler = () => {

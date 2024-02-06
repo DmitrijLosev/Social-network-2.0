@@ -1,7 +1,7 @@
 import {Provider} from "react-redux";
 import {applyMiddleware, combineReducers, createStore} from "redux";
 import {PostType, profileReducer} from "../redux/profile-reducer";
-import {usersReducer} from "../redux/users-reduser";
+import {usersReducer} from "../redux/users-reducer";
 import {DialogsFilterType, messagesReducer} from "../redux/messages-reducer";
 import {UserType} from "../api/api-users";
 import {DialogsType, MessageType} from "../api/api-dialogs";

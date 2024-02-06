@@ -1,16 +1,15 @@
 import React, {useEffect} from "react";
 import {MyPosts} from "./MyPosts/MyPosts";
 import {ProfileInfo} from "./ProfileInfo/ProfileInfo";
-import {RootStateType} from "../../redux/redux-store";
-import {useDispatch, useSelector} from "react-redux";
-import {actions, ProfilePageStateType} from "../../redux/profile-reducer";
+import {actions} from "../../redux/profile-reducer";
 import {useParams} from "react-router-dom";
 import {profileApi} from "../../api/api-profile";
 import {commonActions} from "../../redux/app-reducer";
+import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 
 
 export const Profile: React.FC = () => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const {id} = useParams<{ id: string }>()
 
     useEffect(() => {
@@ -29,7 +28,7 @@ export const Profile: React.FC = () => {
     }, [])
 
 
-    const profilePageState = useSelector<RootStateType, ProfilePageStateType>(state => state.profilePage)
+    const profilePageState = useAppSelector(state => state.profilePage)
 
     return (
         <>

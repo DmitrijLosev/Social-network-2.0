@@ -1,18 +1,16 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {Avatar, Button, List} from "antd";
-import {useDispatch, useSelector} from "react-redux";
-import {actions, MessagesPageStateType, setDialogsTC, upInDialogListTC} from "../../redux/messages-reducer";
-import {RootStateType} from "../../redux/redux-store";
+import {actions,  setDialogsTC, upInDialogListTC} from "../../redux/messages-reducer";
 import styled from "styled-components";
 import unknown from "../../assets/images/UnknowIcon.svg";
 import {NavLink} from "react-router-dom";
+import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 
 
 export const DialogsPage = () => {
 
-
-    const dispatch = useDispatch()
-    const {dialogs, countDialogsPageForShow,filterForDialogs} = useSelector<RootStateType, MessagesPageStateType>(state => state.messagesPage)
+    const dispatch = useAppDispatch()
+    const {dialogs, countDialogsPageForShow,filterForDialogs} = useAppSelector(state => state.messagesPage)
 
 
     useEffect(() => {
@@ -44,9 +42,6 @@ export const DialogsPage = () => {
     const setFilterAllHandler = () =>{
         dispatch(actions.setFilterForDialogs("all"))
     }
-
-
-
 
 
     return (

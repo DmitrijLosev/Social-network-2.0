@@ -1,8 +1,8 @@
-import React, {Dispatch, LegacyRef} from "react";
+import React, {LegacyRef} from "react";
 import {Post} from "./Post/Post";
 import styled from "styled-components";
-import {actions, PostType, ProfileActionsType} from "../../../redux/profile-reducer";
-import {useDispatch} from "react-redux";
+import {actions, PostType} from "../../../redux/profile-reducer";
+import {useAppDispatch} from "../../../redux/hooks";
 
 
 
@@ -14,7 +14,7 @@ type MyPostsPropsType = {
 
 export const MyPosts: React.FC<MyPostsPropsType> = ({posts, typingPostText}) => {
 
-    const dispatch=useDispatch<Dispatch<ProfileActionsType>>()
+    const dispatch=useAppDispatch()
 
     const newPostElement: LegacyRef<HTMLTextAreaElement> = React.createRef();
     const addPost = () => {

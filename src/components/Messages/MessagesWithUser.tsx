@@ -3,16 +3,14 @@ import {useParams} from "react-router-dom";
 import {
     actions,
     filterMessagesTC,
-    MessagesPageStateType,
     sendMessageTC,
     setMessagesWithUserTC
 } from "../../redux/messages-reducer";
-import {useDispatch, useSelector} from "react-redux";
-import {RootStateType} from "../../redux/redux-store";
 import {Message} from "./Message";
 import styled from "styled-components";
 import unknown from "../../assets/images/UnknowIcon.svg";
 import {Button, ConfigProvider, DatePicker, DatePickerProps, Input, Pagination, PaginationProps} from "antd";
+import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 
 const {TextArea} = Input;
 
@@ -21,7 +19,7 @@ export const MessagesWithUser = () => {
 
     const [filterDate, setFilterDate] = useState<string>("")
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const {
         dialogs,
         userIdForMessaging,
@@ -29,8 +27,8 @@ export const MessagesWithUser = () => {
         newMessageText,
         totalMessagesCount,
         partisipantProfile
-    } =
-        useSelector<RootStateType, MessagesPageStateType>(state => state.messagesPage)
+    } = useAppSelector(state => state.messagesPage)
+
     const {id} = useParams<{ id: "string" }>();
 
     useEffect(() => {

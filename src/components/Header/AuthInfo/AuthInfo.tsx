@@ -1,11 +1,9 @@
 import React from "react";
-import {AuthStateType} from "../../../redux/auth-reducer";
-import {RootStateType} from "../../../redux/redux-store";
-import {useSelector} from "react-redux";
 import {Button} from "antd";
 import styled from "styled-components";
 import unknown from "../../../assets/images/UnknowIcon.svg"
 import {NavLink} from "react-router-dom";
+import {useAppSelector} from "../../../redux/hooks";
 
 export const AuthInfo = () => {
 
@@ -14,7 +12,7 @@ export const AuthInfo = () => {
         ownerProfile,
         ownerLogin,
         ownerEmail
-    } = useSelector<RootStateType, AuthStateType>(state => state.authPage)
+    } = useAppSelector(state => state.authPage)
 
 
     return (

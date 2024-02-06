@@ -1,6 +1,5 @@
 import {dialogsApi, DialogsType, MessageType} from "../api/api-dialogs";
-import {ThunkDispatch} from "redux-thunk";
-import {ActionsType, RootStateType} from "./redux-store";
+import {ThunkCommonType} from "./redux-store";
 import {commonActions, SetIsFetchingActionType} from "./app-reducer";
 import {profileApi, ProfileType} from "../api/api-profile";
 
@@ -100,7 +99,7 @@ export const actions = {
         ({type: SET_PARTICIPANT_PROFILE, profile}) as const,
 }
 
-export const sendMessageTC = () => async (dispatch: ThunkDispatch<RootStateType, unknown, ActionsType>, getState: () => RootStateType) => {
+export const sendMessageTC = ():ThunkCommonType => async (dispatch, getState) => {
     dispatch(commonActions.setIsFetching(true))
     const userId = getState().messagesPage.userIdForMessaging;
     const messageText = getState().messagesPage.newMessageText
@@ -115,7 +114,7 @@ export const sendMessageTC = () => async (dispatch: ThunkDispatch<RootStateType,
     }
 }
 
-export const setMessagesWithUserTC = (userId: number) => async (dispatch: ThunkDispatch<RootStateType, unknown, ActionsType>, getState: () => RootStateType) => {
+export const setMessagesWithUserTC = (userId: number):ThunkCommonType => async (dispatch, getState) => {
     dispatch(commonActions.setIsFetching(true))
     dispatch(actions.setUserIdForMessaging(userId))
     if (getState().messagesPage.dialogs.length === 0) {
@@ -132,20 +131,20 @@ export const setMessagesWithUserTC = (userId: number) => async (dispatch: ThunkD
     dispatch(commonActions.setIsFetching(false))
 }
 
-export const setDialogsTC = () => async (dispatch: ThunkDispatch<RootStateType, unknown, ActionsType>) => {
+export const setDialogsTC = ():ThunkCommonType => async dispatch => {
     dispatch(commonActions.setIsFetching(true))
     let response = await dialogsApi.getDialogs()
     dispatch(actions.setDialogs(response))
     dispatch(commonActions.setIsFetching(false))
 }
 
-export const setNewMessagesCountTC = () => async (dispatch: ThunkDispatch<RootStateType, unknown, ActionsType>, getState: () => RootStateType) => {
+export const setNewMessagesCountTC = ():ThunkCommonType => async (dispatch, getState) => {
     let response = await dialogsApi.getNewMessagesCount()
     if (response !== getState().messagesPage.newMessagesCount) {
         dispatch(actions.setNewMessagesCont(response))
     }
 }
-export const upInDialogListTC = (userId: number) => async (dispatch: ThunkDispatch<RootStateType, unknown, ActionsType>) => {
+export const upInDialogListTC = (userId: number):ThunkCommonType => async dispatch => {
     dispatch(commonActions.setIsFetching(true))
     let response = await dialogsApi.putDialogWithUserInTopOfList(userId);
     if (response.resultCode === 0) {
@@ -155,7 +154,7 @@ export const upInDialogListTC = (userId: number) => async (dispatch: ThunkDispat
     dispatch(commonActions.setIsFetching(false))
 }
 
-export const deleteMessageTC = (messageId: string) => async (dispatch: ThunkDispatch<RootStateType, unknown, ActionsType>) => {
+export const deleteMessageTC = (messageId: string):ThunkCommonType => async dispatch => {
     dispatch(commonActions.setIsFetching(true))
     let response = await dialogsApi.deleteMessage(messageId);
     if (response.resultCode === 0) {
@@ -163,9 +162,8 @@ export const deleteMessageTC = (messageId: string) => async (dispatch: ThunkDisp
     }
     dispatch(commonActions.setIsFetching(false))
 }
-export const isMessageViewedTC = (messageId: string) =>
-    async (dispatch: ThunkDispatch<RootStateType, unknown, ActionsType>,
-           getState: () => RootStateType) => {
+export const isMessageViewedTC = (messageId: string):ThunkCommonType =>
+    async (dispatch, getState) => {
         dispatch(commonActions.setIsFetching(true))
         let response = await dialogsApi.checkMessageViewed(messageId);
         if (response !== getState().messagesPage.messagesWithUser.filter(m => m.id === messageId)[0].viewed)
@@ -173,8 +171,8 @@ export const isMessageViewedTC = (messageId: string) =>
         dispatch(commonActions.setIsFetching(false))
     }
 
-export const filterMessagesTC = (userID:number,filterDate: string) =>
-    async (dispatch: ThunkDispatch<RootStateType, unknown, ActionsType>) => {
+export const filterMessagesTC = (userID:number,filterDate: string):ThunkCommonType =>
+    async dispatch => {
         dispatch(commonActions.setIsFetching(true))
         let response = await dialogsApi.getMessageAfterThisDate(userID,filterDate);
        dispatch(actions.setMessagesWithUser(response))
