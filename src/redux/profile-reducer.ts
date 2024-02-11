@@ -1,5 +1,6 @@
-import {ActionsType} from "./redux-store";
-import {ProfileType} from "../api/api-profile";
+import {ActionsType, ThunkCommonType} from "./redux-store";
+import {profileApi, ProfileType} from "../api/api-profile";
+import {commonActions} from "./app-reducer";
 
 
 const ADD_POST = "PROFILE/ADD-POST" as const
@@ -59,6 +60,20 @@ export const actions = {
     deletePost: (postId: number) => ({type: DELETE_POST, postId}) as const,
     setProfile:(profile:ProfileType)=>({type: SET_PROFILE, profile}) as const
 }
+
+export const getProfile = (userId:string):ThunkCommonType =>async (dispatch,getState) => {
+    let profileId = userId ? userId : "30556"
+
+    dispatch(commonActions.setIsFetching(true))
+    let res = await profileApi.getProfile(+profileId)
+    dispatch(actions.setProfile(res))
+    dispatch(commonActions.setIsFetching(false))
+}
+
+
+
+
+
 
 export type PostType = {
     id: number

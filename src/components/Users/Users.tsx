@@ -1,10 +1,8 @@
 import React, {useEffect} from "react";
-import {actions} from "../../redux/users-reducer";
+import {actions, getUsers} from "../../redux/users-reducer";
 import {User} from "./User";
 import styled from "styled-components";
-import {usersApi} from "../../api/api-users";
 import {ConfigProvider, Pagination, PaginationProps} from "antd";
-import {commonActions} from "../../redux/app-reducer";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 
 export const Users = () => {
@@ -12,15 +10,7 @@ export const Users = () => {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-
-        (async () => {
-            dispatch(commonActions.setIsFetching(true))
-            let response = await usersApi.getUsers(pageSize, currentPage)
-            dispatch(actions.setUsers(response.items))
-            dispatch(actions.setTotalUsersCount(response.totalCount))
-            dispatch(commonActions.setIsFetching(false))
-        }) ()
-
+        dispatch(getUsers())
     }, [currentPage,pageSize])
 
     const onPaginationChange: PaginationProps['onChange'] = (pageSize,pageNumber) => {

@@ -4,9 +4,7 @@ import styled, {css} from "styled-components";
 import {setNewMessagesCountTC} from "../../redux/messages-reducer";
 import {NavLink} from "react-router-dom";
 import {Preloader} from "../Commons/Preloader/Preloader";
-import {authApi} from "../../api/api-auth";
-import {actions} from "../../redux/auth-reducer";
-import {profileApi} from "../../api/api-profile";
+import {authMe} from "../../redux/auth-reducer";
 import {AuthInfo} from "./AuthInfo/AuthInfo";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 
@@ -20,23 +18,8 @@ export const Header = () => {
 
     useEffect(() => {
 
-        (async () => {
-            let res = await authApi.getAuth()
-            if (res.resultCode === 0) {
-                dispatch(actions.setIsAuth(true, res.data))
-                let res2 = await profileApi.getProfile(res.data.id)
-                dispatch(actions.setOwnerProfile(res2))
-            } else {
-                dispatch(actions.setIsAuth(false))
-            }
-        })()
+        dispatch(authMe())
 
-    }, [])
-
-    useEffect(() => {
-        if(isAuth) {
-            dispatch(setNewMessagesCountTC())
-        }
         let intervalId = setInterval(() => {
             if(isAuth) {
                 dispatch(setNewMessagesCountTC())

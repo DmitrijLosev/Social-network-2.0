@@ -1,47 +1,32 @@
 import React from "react";
-import {actions} from "../../redux/users-reducer";
+import {follow, unfollow} from "../../redux/users-reducer";
 import styled from "styled-components";
-import follow from "./../../assets/images/follower.svg"
-import unfollow from "./../../assets/images/unfollower.svg"
-import {usersApi, UserType} from "../../api/api-users";
+import followUser from "./../../assets/images/follower.svg"
+import unfollowUser from "./../../assets/images/unfollower.svg"
+import { UserType} from "../../api/api-users";
 import unknown from "../../assets/images/UnknowIcon.svg"
 import message from "../../assets/images/Message.svg"
 import {NavLink, useHistory} from "react-router-dom";
-import {commonActions} from "../../redux/app-reducer";
-import {useAppDispatch} from "../../redux/hooks";
+import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 
 
 export const User: React.FC<{ user: UserType }> = React.memo(({user}) => {
 
         const dispatch = useAppDispatch()
         const history = useHistory()
-
+    const idOfFollowingUsers = useAppSelector(state=>state.usersPage.idOfFollowingUsers)
+const isAuth = useAppSelector(state => state.authPage.isAuth)
         const followButtonHandler = () => {
-            (async () => {
-                dispatch(commonActions.setIsFetching(true))
-                let res = await usersApi.followUser(user.id)
-                if (res.resultCode === 0) {
-                    dispatch(actions.follow(user.id))
-                }
-                dispatch(commonActions.setIsFetching(false))
-            }) ()
+            dispatch(follow(user.id))
             }
 
         const unfollowButtonHandler = () => {
-            (async () => {
-                dispatch(commonActions.setIsFetching(true))
-                let res = await usersApi.unfollowUser(user.id)
-                if (res.resultCode === 0) {
-                    dispatch(actions.unfollow(user.id))
-                }
-                dispatch(commonActions.setIsFetching(false))
-            }) ()
+            dispatch(unfollow(user.id))
         }
 
         const startMessagingHandler = () => {
             history.push(`/messages/${user.id}`)
         }
-
 
         return (
             <StyledUser>
@@ -53,11 +38,12 @@ export const User: React.FC<{ user: UserType }> = React.memo(({user}) => {
                     <UserStatus>{user.status}</UserStatus>
                 </UserInfoWrapper>
                 <FollowButtomWrapper>
-                    <StyledFollowButton onClick={followButtonHandler} disabled={user.followed}>
-                        <img src={follow}
+                    <StyledFollowButton onClick={followButtonHandler} disabled={user.followed ||
+                        idOfFollowingUsers.includes(user.id) || !isAuth}>
+                        <img src={followUser}
                              alt={"follow button here"}/></StyledFollowButton>
-                    <StyledFollowButton onClick={unfollowButtonHandler} disabled={!user.followed}>
-                        <img src={unfollow}
+                    <StyledFollowButton onClick={unfollowButtonHandler} disabled={!user.followed ||  idOfFollowingUsers.includes(user.id) || !isAuth}>
+                        <img src={unfollowUser}
                              alt={"unfollow button here"}/></StyledFollowButton>
                     <StyledFollowButton onClick={startMessagingHandler}>
                         <img src={message}

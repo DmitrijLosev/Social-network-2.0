@@ -1,23 +1,25 @@
 import React, {useEffect} from "react";
 import {Avatar, Button, List} from "antd";
-import {actions,  setDialogsTC, upInDialogListTC} from "../../redux/messages-reducer";
+import {actions, setDialogsTC, upInDialogListTC} from "../../redux/messages-reducer";
 import styled from "styled-components";
 import unknown from "../../assets/images/UnknowIcon.svg";
-import {NavLink} from "react-router-dom";
+import {NavLink, Redirect} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
+
 
 
 export const DialogsPage = () => {
 
     const dispatch = useAppDispatch()
-    const {dialogs, countDialogsPageForShow,filterForDialogs} = useAppSelector(state => state.messagesPage)
+    const {dialogs, countDialogsPageForShow, filterForDialogs} = useAppSelector(state => state.messagesPage)
 
 
     useEffect(() => {
         dispatch(setDialogsTC());
-        return () =>{
+        return () => {
             dispatch(actions.setFilterForDialogs("part"));
-        dispatch(actions.setCountDialogsPageForShow(1))} ;
+            dispatch(actions.setCountDialogsPageForShow(1))
+        };
     }, []);
 
     const upInDialogListClickHandler = (userId: number) => {
@@ -25,24 +27,24 @@ export const DialogsPage = () => {
     }
 
     let filteredDialogs = dialogs;
-    if (filterForDialogs ==="part" ) {
-        if (filteredDialogs.length>=10*countDialogsPageForShow)
-        { filteredDialogs = filteredDialogs.filter((el, index)=> index <  10*countDialogsPageForShow)}
-        else {
-            filteredDialogs = filteredDialogs.length % 10 === 0 ? filteredDialogs.filter((el, index)=> index <  10 * countDialogsPageForShow)
-                : filteredDialogs.filter((el, index)=> index <   10 * (countDialogsPageForShow-1) + dialogs.length % 10)
+    if (filterForDialogs === "part") {
+        if (filteredDialogs.length >= 10 * countDialogsPageForShow) {
+            filteredDialogs = filteredDialogs.filter((el, index) => index < 10 * countDialogsPageForShow)
+        } else {
+            filteredDialogs = filteredDialogs.length % 10 === 0 ? filteredDialogs.filter((el, index) => index < 10 * countDialogsPageForShow)
+                : filteredDialogs.filter((el, index) => index < 10 * (countDialogsPageForShow - 1) + dialogs.length % 10)
         }
-    }
-    const showMoreButtonHandler = () =>{
-        if(dialogs.length <= 10*(countDialogsPageForShow+1)) {
-            dispatch(actions.setFilterForDialogs("all"))
-        }
-       dispatch(actions.setCountDialogsPageForShow(countDialogsPageForShow+1))
-    }
-    const setFilterAllHandler = () =>{
-        dispatch(actions.setFilterForDialogs("all"))
     }
 
+    const showMoreButtonHandler = () => {
+        if (dialogs.length <= 10 * (countDialogsPageForShow + 1)) {
+            dispatch(actions.setFilterForDialogs("all"))
+        }
+        dispatch(actions.setCountDialogsPageForShow(countDialogsPageForShow + 1))
+    }
+    const setFilterAllHandler = () => {
+        dispatch(actions.setFilterForDialogs("all"))
+    }
 
     return (
         <DialogsWrapper>
@@ -68,9 +70,9 @@ export const DialogsPage = () => {
             />
             {dialogs.length > 10 && filterForDialogs !== "all" &&
                 <ButtonWrapper>
-                    <Button type="primary" size={"large"} onClick={showMoreButtonHandler} >Show
+                    <Button type="primary" size={"large"} onClick={showMoreButtonHandler}>Show
                         more...</Button>
-                    <Button type="primary" size={"large"} onClick={setFilterAllHandler} >Show
+                    <Button type="primary" size={"large"} onClick={setFilterAllHandler}>Show
                         all</Button>
                 </ButtonWrapper>
             }

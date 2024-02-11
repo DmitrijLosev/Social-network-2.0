@@ -132,10 +132,10 @@ export const setMessagesWithUserTC = (userId: number):ThunkCommonType => async (
 }
 
 export const setDialogsTC = ():ThunkCommonType => async dispatch => {
-    dispatch(commonActions.setIsFetching(true))
-    let response = await dialogsApi.getDialogs()
-    dispatch(actions.setDialogs(response))
-    dispatch(commonActions.setIsFetching(false))
+       dispatch(commonActions.setIsFetching(true))
+       let response = await dialogsApi.getDialogs()
+       dispatch(actions.setDialogs(response))
+       dispatch(commonActions.setIsFetching(false))
 }
 
 export const setNewMessagesCountTC = ():ThunkCommonType => async (dispatch, getState) => {

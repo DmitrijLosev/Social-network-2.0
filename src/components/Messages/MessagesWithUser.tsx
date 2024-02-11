@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {Redirect, useParams} from "react-router-dom";
 import {
     actions,
     filterMessagesTC,
@@ -11,6 +11,7 @@ import styled from "styled-components";
 import unknown from "../../assets/images/UnknowIcon.svg";
 import {Button, ConfigProvider, DatePicker, DatePickerProps, Input, Pagination, PaginationProps} from "antd";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
+import {useAuth} from "../Commons/Hooks/useAuth";
 
 const {TextArea} = Input;
 
