@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useEffect, useState} from "react";
-import {Redirect, useParams} from "react-router-dom";
+import {NavLink, useParams} from "react-router-dom";
 import {
     actions,
     filterMessagesTC,
@@ -11,7 +11,7 @@ import styled from "styled-components";
 import unknown from "../../assets/images/UnknowIcon.svg";
 import {Button, ConfigProvider, DatePicker, DatePickerProps, Input, Pagination, PaginationProps} from "antd";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
-import {useAuth} from "../Commons/Hooks/useAuth";
+
 
 const {TextArea} = Input;
 
@@ -65,16 +65,17 @@ export const MessagesWithUser = () => {
             dispatch(setMessagesWithUserTC(userIdForMessaging))
         }
     };
+
     const photo = partisipantProfile && partisipantProfile.photos.small && partisipantProfile.photos.small
     return (<>
             <MessagesTitle>Messaging with :</MessagesTitle>
             <TitleMessaging>
-                <UserPhoto
+                <NavLink to={'/profile/'+ userIdForMessaging}> <UserPhoto
                     src={partisipantProfile && partisipantProfile.photos.small ? partisipantProfile.photos.small : unknown}
-                    alt={"user photo here"}/>
+                    alt={"user photo here"}/></NavLink>
                 <InfoWrapper>
                     <h3>{partisipantProfile && partisipantProfile.fullName}</h3>
-                    {messagesWithUser.length > 0 &&
+                    {messagesWithUser.length > 0 && dialogs.filter(u => u.id === userIdForMessaging).length>0 &&
                         <Prescription>Last
                             Activity: {dialogs.filter(u => u.id === userIdForMessaging)[0].lastUserActivityDate.slice(0, 10) + " " + dialogs.filter(u => u.id === userIdForMessaging)[0].lastUserActivityDate.slice(11, 19)}
                         </Prescription>}

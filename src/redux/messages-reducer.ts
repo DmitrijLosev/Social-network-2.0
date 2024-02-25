@@ -106,7 +106,6 @@ export const sendMessageTC = ():ThunkCommonType => async (dispatch, getState) =>
     if (userId) {
         let response = await dialogsApi.sentMessageToUser(userId, messageText)
         if (response.resultCode === 0) {
-            await dispatch(setDialogsTC());
             let {deletedBySender, deletedByRecipient, isSpam, distributionId, ...newMessage} = response.data.message;
             dispatch(actions.addNewMessage(newMessage));
         }
@@ -115,11 +114,11 @@ export const sendMessageTC = ():ThunkCommonType => async (dispatch, getState) =>
 }
 
 export const setMessagesWithUserTC = (userId: number):ThunkCommonType => async (dispatch, getState) => {
+
     dispatch(commonActions.setIsFetching(true))
     dispatch(actions.setUserIdForMessaging(userId))
     if (getState().messagesPage.dialogs.length === 0) {
-        let response = await dialogsApi.getDialogs()
-        dispatch(actions.setDialogs(response))
+        dispatch(setDialogsTC())
     }
         let response = await dialogsApi.getDialogWithUser(userId, getState().messagesPage.messagesPageNumber, 10)
         dispatch(actions.setMessagesWithUser(response.items))
@@ -144,12 +143,14 @@ export const setNewMessagesCountTC = ():ThunkCommonType => async (dispatch, getS
         dispatch(actions.setNewMessagesCont(response))
     }
 }
-export const upInDialogListTC = (userId: number):ThunkCommonType => async dispatch => {
+export const upInDialogListTC = (userId: number):ThunkCommonType => async (dispatch,getState) => {
     dispatch(commonActions.setIsFetching(true))
     let response = await dialogsApi.putDialogWithUserInTopOfList(userId);
     if (response.resultCode === 0) {
-        let response = await dialogsApi.getDialogs()
-        dispatch(actions.setDialogs(response))
+        let dialogsList = getState().messagesPage.dialogs;
+        let dialogWithUser = dialogsList.filter(d=>d.userName === getState().messagesPage.partisipantProfile?.fullName)
+        let dialogWithOutUser = dialogsList.filter(d=>d.userName !== getState().messagesPage.partisipantProfile?.fullName)
+        dispatch(actions.setDialogs([...dialogWithUser,...dialogWithOutUser]))
     }
     dispatch(commonActions.setIsFetching(false))
 }

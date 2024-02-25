@@ -1,14 +1,15 @@
 import {ActionsType, ThunkCommonType} from "./redux-store";
 import {profileApi, ProfileType} from "../api/api-profile";
 import {commonActions} from "./app-reducer";
+import {PostFormType} from "../components/Profile/MyPosts/MyPosts";
 
 
 const ADD_POST = "PROFILE/ADD-POST" as const
-const CHANGE_POST = "PROFILE/CHANGE-POST" as const
 const LIKE_POST = "PROFILE/LIKE-POST" as const
 const DISLIKE_POST = "PROFILE/DISLIKE-POST" as const
 const DELETE_POST = "PROFILE/DELETE-POST" as const
 const SET_PROFILE = "PROFILE/SET-PROFILE" as const
+const SET_PROFILE_STATUS = "PROFILE/SET-PROFILE-STATUS" as const
 
 const initialState = {
     posts: [
@@ -16,8 +17,8 @@ const initialState = {
         {id: 2, post: "How are you?", likesCount: 19, dislikesCount: 2},
         {id: 3, post: "JS is the power of magic!", likesCount: 11, dislikesCount: 5},
     ] as PostType[],
-    typingPostText: "",
-    profile:null as ProfileType | null
+    profile:null as ProfileType | null,
+    status:''
 }
 
 export const profileReducer = (state: ProfilePageStateType = initialState, action: ActionsType): ProfilePageStateType => {
@@ -25,16 +26,14 @@ export const profileReducer = (state: ProfilePageStateType = initialState, actio
     switch (action.type) {
         case ADD_POST:
             return {
-                ...state, posts: [...state.posts, {
+                ...state, posts: [{
                     id: state.posts.length + 1,
-                    post: state.typingPostText,
+                    post: action.post,
                     likesCount: 0,
                     dislikesCount: 0
-                }],
-                typingPostText: ""
+                }, ...state.posts]
             }
-        case CHANGE_POST:
-            return {...state, typingPostText: action.typingPostText}
+
         case LIKE_POST:
             return {...state,
                 posts: state.posts.map(p=>p.id === action.postId ?
@@ -47,29 +46,45 @@ export const profileReducer = (state: ProfilePageStateType = initialState, actio
             return {...state,posts: state.posts.filter(p=>p.id !== action.postId)}
         case SET_PROFILE:
             return {...state,profile: action.profile}
+        case SET_PROFILE_STATUS:
+            return {...state,status: action.status}
         default:
             return state
 
     }
 }
 export const actions = {
-    addPost: {type: ADD_POST} as const,
-    changePost:(typingPostText: string)=>({type: CHANGE_POST, typingPostText}) as const,
+    addPost:(post:string)=>({type: ADD_POST, post})  as const,
     likePost: (postId: number) => ({type: LIKE_POST, postId}) as const,
     dislikePost: (postId: number) => ({type: DISLIKE_POST, postId}) as const,
     deletePost: (postId: number) => ({type: DELETE_POST, postId}) as const,
-    setProfile:(profile:ProfileType)=>({type: SET_PROFILE, profile}) as const
+    setProfile:(profile:ProfileType)=>({type: SET_PROFILE, profile}) as const,
+    setStatus:(status:string)=>({type: SET_PROFILE_STATUS, status}) as const
 }
 
 export const getProfile = (userId:string):ThunkCommonType =>async (dispatch,getState) => {
-    let profileId = userId ? userId : "30556"
+    if(userId && +userId !== getState().authPage.ownerId) {
+        dispatch(commonActions.setIsFetching(true))
+        let res = await Promise.all([profileApi.getProfile(+userId),await profileApi.getStatus(+userId)])
+        dispatch(actions.setProfile(res[0]))
+        dispatch(actions.setStatus(res[1]))
+    } else {
+        let res = await profileApi.getStatus(getState().authPage.ownerId!)
+        dispatch(actions.setProfile(getState().authPage.ownerProfile!));
+        dispatch(actions.setStatus(res))
+    }
 
-    dispatch(commonActions.setIsFetching(true))
-    let res = await profileApi.getProfile(+profileId)
-    dispatch(actions.setProfile(res))
     dispatch(commonActions.setIsFetching(false))
 }
 
+export const updateStatus = (status:string):ThunkCommonType =>async (dispatch) => {
+    dispatch(commonActions.setIsFetching(true))
+    let res = await profileApi.setStatus(status)
+    if(res.resultCode===0){
+        dispatch(actions.setStatus(status))
+    }
+    dispatch(commonActions.setIsFetching(false))
+}
 
 
 
@@ -82,4 +97,4 @@ export type PostType = {
     dislikesCount: number
 }
 export type ProfilePageStateType = typeof initialState;
-export type ProfileActionsType = typeof actions.addPost | ReturnType<typeof actions.changePost> | ReturnType<typeof actions.likePost> | ReturnType<typeof actions.dislikePost> | ReturnType<typeof actions.deletePost> | ReturnType<typeof actions.setProfile>
+export type ProfileActionsType =ReturnType<typeof actions.addPost>  | ReturnType<typeof actions.likePost> | ReturnType<typeof actions.dislikePost> | ReturnType<typeof actions.deletePost> | ReturnType<typeof actions.setProfile> | ReturnType<typeof actions.setStatus>

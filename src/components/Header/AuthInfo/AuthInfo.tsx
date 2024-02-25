@@ -2,10 +2,11 @@ import React from "react";
 import {Button} from "antd";
 import styled from "styled-components";
 import unknown from "../../../assets/images/UnknowIcon.svg"
-import {NavLink} from "react-router-dom";
-import {useAppSelector} from "../../../redux/hooks";
+import {useAppDispatch, useAppSelector} from "../../../redux/hooks";
+import {logout} from "../../../redux/auth-reducer";
 
 export const AuthInfo = () => {
+const dispatch = useAppDispatch()
 
     const {
         isAuth,
@@ -13,10 +14,13 @@ export const AuthInfo = () => {
         ownerLogin,
         ownerEmail
     } = useAppSelector(state => state.authPage)
+const logoutHandler = () => {
+        dispatch(logout())
+}
 
-
-    return (
-        isAuth ?
+    return (<>
+        {isAuth &&
+        <LoginWrapper>
             <FlexWrapper>
                 <OwnerPhoto src={ownerProfile?.photos.small ? ownerProfile?.photos.small : unknown}
                             alt="owner photo here"/>
@@ -25,7 +29,10 @@ export const AuthInfo = () => {
                     <span>login: {ownerLogin ? ownerLogin : ""}</span>
                     <span>e-mail: {ownerEmail ? ownerEmail : ""}</span>
                 </OwnerInfoWrapper>
-            </FlexWrapper> : <Button type='primary'><NavLink to={"/login"}>Login</NavLink></Button>
+            </FlexWrapper>
+    <Button type='primary' onClick={logoutHandler}>Logout</Button>
+        </LoginWrapper>}
+        </>
     );
 };
 
@@ -48,4 +55,8 @@ display: flex;
   & > span {
     font-size: 14px;
   }
+`
+const LoginWrapper = styled.div`
+display: flex;
+  gap:10px
 `

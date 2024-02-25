@@ -1,9 +1,7 @@
-import {action} from "@storybook/addon-actions"
+
 import {ProfileInfo} from "./ProfileInfo";
 import React from "react";
 import {BrowserRouter} from "react-router-dom";
-import {Provider} from "react-redux";
-import {store} from "../../../redux/redux-store";
 import {GlobalStyles} from "../../styles/Global.styles";
 import {ReduxStoreProviderDecorator} from "../../../stories/ReduxStoreProviderDecorator";
 
@@ -48,7 +46,7 @@ export const profileInfo = () => {
                 photos: {
                 small: "https://social-network.samuraijs.com/activecontent/images/users/2/user-small.jpg?v=0",
                 large: "https://social-network.samuraijs.com/activecontent/images/users/2/user.jpg?v=0"}
-            }}/>
+            }} ownerId = {2}/>
             <GlobalStyles/>
     </BrowserRouter>
 };

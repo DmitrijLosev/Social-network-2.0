@@ -52,18 +52,22 @@ const SmallProfilePhoto = styled.img`
 
 `
 const StyledPost = styled.p`
+overflow: hidden;
 
 `
 const PostInfoWrapper = styled.div`
   display: flex;
   gap: 10px;
+  width: 100%;
 `
 
 const PostWrapper = styled.div`
   max-width: 700px;
+  
   background-color: lightblue;
   border-radius: 5px;
-
+display: flex;
+  flex-direction: column;
   button {
     background-color: unset;
     border: none;

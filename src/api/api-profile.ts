@@ -1,10 +1,22 @@
 import {fetchInstance} from "./fetchInstance";
+import {ResponseType} from "./api-dialogs";
 
 const {base_Url,settings,getResponse} = fetchInstance()
 
 export const profileApi = {
     getProfile(userId:number):Promise<ProfileType> {
         return getResponse(fetch(`${base_Url}/profile/${userId}`, settings))
+    },
+    getStatus(userId:number):Promise<string> {
+        return getResponse(fetch(`${base_Url}/profile/status/${userId}`, settings))
+    },
+    setStatus(status:string):Promise<ResponseType> {
+        return getResponse(fetch(`${base_Url}/profile/status`, {
+                ...settings,
+                method: "PUT",
+                body: JSON.stringify({status})
+            }
+            ))
     }
 }
 

@@ -22,7 +22,7 @@ export const FirstStory: Story = {
 
 /*const onChangeHandler = action("onChange Accordion")
 const callback = action("some item was clicked")*/
-export const GetUsersApi = () => {
+export const GetProfileApi = () => {
     const [state,setState]=useState<any>()
     useEffect(() => {
 
@@ -36,6 +36,33 @@ export const GetUsersApi = () => {
 
     return <div>{JSON.stringify(state)}</div>
 };
+export const GetProfileStatus = () => {
+    const [state,setState]=useState<any>()
+    useEffect(() => {
 
+        (async () => {
+                let data = await profileApi.getStatus(30556)
+                setState(data)
+            }
+        )()
+
+    }, [])
+
+    return <div>{JSON.stringify(state)}</div>
+};
+export const UpdateProfileStatus = () => {
+    const [state,setState]=useState<any>()
+    useEffect(() => {
+
+        (async () => {
+                let data = await profileApi.setStatus('HELLO')
+                setState(data)
+            }
+        )()
+
+    }, [])
+
+    return <div>{JSON.stringify(state)}</div>
+};
 
 

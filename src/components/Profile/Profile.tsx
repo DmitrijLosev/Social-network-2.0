@@ -18,12 +18,12 @@ export const Profile: React.FC = () => {
 
 
     const profilePageState = useAppSelector(state => state.profilePage)
-
+const ownerId = useAppSelector(state=>state.authPage.ownerId)
 
     return (
         <>
-            <ProfileInfo profile={profilePageState.profile}/>
-            <MyPosts posts={profilePageState.posts} typingPostText={profilePageState.typingPostText}/>
+            <ProfileInfo profile={profilePageState.profile} ownerId = {ownerId}/>
+            {ownerId && ownerId === profilePageState.profile?.userId && <MyPosts posts={profilePageState.posts}/>}
         </>
     );
 };

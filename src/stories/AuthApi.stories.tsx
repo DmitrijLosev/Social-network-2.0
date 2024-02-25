@@ -20,7 +20,7 @@ export const FirstStory: Story = {
 
 /*const onChangeHandler = action("onChange Accordion")
 const callback = action("some item was clicked")*/
-export const GetUsersApi = () => {
+export const MeApi = () => {
     const [state,setState]=useState<any>()
     useEffect(() => {
 
@@ -34,6 +34,34 @@ export const GetUsersApi = () => {
 
     return <div>{JSON.stringify(state)}</div>
 };
+export const LoginApi = () => {
+    const [state,setState]=useState<any>()
+    useEffect(() => {
 
+        (async () => {
+                let data = await authApi.login({email:"dmitrijslosevs@inbox.lv",
+                password:"createreactapp", rememberMe:true})
+                setState(data)
+            }
+        )()
+
+    }, [])
+
+    return <div>{JSON.stringify(state)}</div>
+};
+export const LogoutApi = () => {
+    const [state,setState]=useState<any>()
+    useEffect(() => {
+
+        (async () => {
+                let data = await authApi.logout()
+                setState(data)
+            }
+        )()
+
+    }, [])
+
+    return <div>{JSON.stringify(state)}</div>
+};
 
 

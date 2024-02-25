@@ -25,7 +25,6 @@ const initialAppState = {
         {id: 2, post: "How are you?", likesCount: 19, dislikesCount: 2},
         {id: 3, post: "JS is the power of magic!", likesCount: 11, dislikesCount: 5},
     ] as PostType[],
-    typingPostText: "",
     users: [] as UserType[],
     totalUsersCount: 0,
     pageSize: 10,
